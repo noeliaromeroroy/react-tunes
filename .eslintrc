@@ -1,4 +1,5 @@
 {
+  // Configuration for JavaScript files
   "extends": [
     "airbnb-base",
     "plugin:prettier/recommended"
@@ -13,13 +14,14 @@
     ]
   },
   "overrides": [
+    // Configuration for TypeScript files
     {
       "files": ["**/*.ts", "**/*.tsx"],
-      "plugins": ["@typescript-eslint", "tailwindcss", "simple-import-sort"],
+      "plugins": [ "tailwindcss", "simple-import-sort"],
       "extends": [
         "plugin:tailwindcss/recommended",
-        "react-app",
         "airbnb",
+        "airbnb-typescript",
         "plugin:prettier/recommended"
       ],
       "parserOptions": {
@@ -33,6 +35,9 @@
             "endOfLine": "auto"
           }
         ],
+        "no-console": "off",
+        "react/no-array-index-key": "off",
+        "react/no-danger": "off"
       }
     }
   ]
