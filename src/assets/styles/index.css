@@ -1,9 +1,19 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
 body {
   @apply bg-blue-gray-900 text-white;
 }
 .welcome {
   @apply text-white text-2xl font-bold;
 }
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+.Search input {
+  @apply w-full rounded-[15px] !border-0 bg-black/50 pr-[5px] !py-6 pl-12 font-normal text-gray-50 hover:border-white;
+}
+.Search .grid {
+  @apply left-4 top-5 text-white;
+}
+.after\:transition-transform::after {
+  @apply !content-none;
+}
