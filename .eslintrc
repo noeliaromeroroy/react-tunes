@@ -14,7 +14,6 @@
     ]
   },
   "overrides": [
-    // Configuration for TypeScript files
     {
       "files": ["**/*.ts", "**/*.tsx"],
       "plugins": [ "tailwindcss", "simple-import-sort"],
@@ -39,6 +38,13 @@
         "react/no-array-index-key": "off",
         "react/no-danger": "off"
       }
+    },
+    {
+      "files": ["**/*.js"],
+      "extends": [
+        "airbnb-base",
+        "plugin:prettier/recommended"
+      ]
     }
   ]
 }
