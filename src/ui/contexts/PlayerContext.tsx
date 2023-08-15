@@ -5,6 +5,8 @@ import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 const PlayerContext = createContext<PlayerContextType>({
   results: [],
   setResults: (value: React.SetStateAction<IPodcast[]>) => {},
+  filteredResults: [],
+  setFilteredResults: (value: React.SetStateAction<IPodcast[]>) => {},
   isHome: true,
   setIsHome: (value: React.SetStateAction<boolean>) => true,
 });
@@ -19,10 +21,20 @@ interface PlayerProviderProps {
 
 export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   const [results, setResults] = useState<IPodcast[]>([]);
-  const [isHome, setIsHome] = useState<boolean>(true); // o false, dependiendo de lo que quieras como inicial
+  const [filteredResults, setFilteredResults] = useState<IPodcast[]>([]);
+  const [isHome, setIsHome] = useState<boolean>(true);
 
   return (
-    <PlayerContext.Provider value={{ results, setResults, isHome, setIsHome }}>
+    <PlayerContext.Provider
+      value={{
+        results,
+        setResults,
+        isHome,
+        setIsHome,
+        filteredResults,
+        setFilteredResults,
+      }}
+    >
       {children}
     </PlayerContext.Provider>
   );

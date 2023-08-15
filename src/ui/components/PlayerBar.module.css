@@ -1,5 +1,5 @@
 .PlayerBar {
-  @apply fixed bottom-0 flex w-full flex-row items-center justify-between bg-black;
+  @apply fixed bottom-0 flex w-full flex-row items-center justify-between bg-black z-10;
 }
 .podcastDetail {
   @apply flex h-full flex-row justify-center gap-6;
