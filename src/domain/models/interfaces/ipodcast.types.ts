@@ -1,4 +1,4 @@
-import { IEpisode } from "./iepisode.types";
+import { IEpisode } from './iEpisode.types';
 
 export interface IPodcast {
     id: string;
