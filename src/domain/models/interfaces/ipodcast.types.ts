@@ -8,4 +8,5 @@ export interface IPodcast {
     episodes: IEpisode[];
     coverImageUrl: string;
     releaseDate: string;
+    feedUrl: string;
 }

@@ -56,10 +56,6 @@ function Search(): JSX.Element {
     setFilteredResults(sortedData);
   }, [orderBy, filterValue, isActiveSearch]);
 
-  const toggleActiveSearch = () => {
-    setIsActiveSearch((prevState) => !prevState);
-  };
-
   return (
     <div>
       <div id="results">
@@ -77,12 +73,7 @@ function Search(): JSX.Element {
             />
           )}
 
-          <Button
-            className="bg-transparent shadow-none p-0 px-2"
-            onClick={toggleActiveSearch}
-          >
-            <SearchIcon />
-          </Button>
+          <SearchIcon />
 
           <div>
             <Select
@@ -120,7 +111,15 @@ function Search(): JSX.Element {
           <tbody className="max-h-[400px] overflow-scroll">
             {filteredResults.map(
               (
-                { id, title, author, coverImageUrl, description, releaseDate },
+                {
+                  id,
+                  title,
+                  author,
+                  coverImageUrl,
+                  description,
+                  releaseDate,
+                  feedUrl,
+                },
                 index,
               ) => {
                 const isLast = index === filteredResults.length - 1;
@@ -137,6 +136,7 @@ function Search(): JSX.Element {
                     </td>
                     <td className="pt-[14px] px-[14px] pb-[19px] flex flex-row gap-4">
                       <Avatar size="md" variant="rounded" src={coverImageUrl} />
+
                       <div className="flex flex-col">
                         <NavLink to={`/detail/${id}`} className=" text-white">
                           {title}
