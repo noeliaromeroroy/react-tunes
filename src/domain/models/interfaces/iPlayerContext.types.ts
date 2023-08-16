@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import { IPodcast } from "./iPodcast.types";
+import { IPodcast } from './iPodcast.types';
 
 export interface PlayerContextType {
     results: IPodcast[];
@@ -14,4 +14,9 @@ export interface PlayerContextType {
     setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
     audio: HTMLAudioElement | null;
     setAudio: React.Dispatch<HTMLAudioElement | null>;
+    togglePlay: () => void;
+    playPodcast: () => void;
+    resetPodcast: () => void;
+    selectPodcast: (id: string) => Promise<void>;
+    selectEpisode: (id: string) => Promise<void>;
 }

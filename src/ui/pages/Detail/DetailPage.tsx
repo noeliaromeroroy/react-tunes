@@ -10,16 +10,59 @@ import {
   formatDate,
   millisToMinutesAndSeconds,
 } from '../../helpers/dateHelper';
+import { SubSearchBar } from '../../components/SubSearchBar';
+import { IEpisode } from '../../../domain/models/interfaces/iEpisode.types';
+import { DetailTable } from '../../components/DetailTable';
 
 function Detail(): JSX.Element {
   const { id } = useParams();
   const { setIsHome, isPlaying, audio, setIsPlaying } = usePlayerContext();
   const [podcastDetail, setPodcastDetail] = useState<IPodcast>();
 
+  const [orderBy, setOrderBy] = useState('');
+  const [filterValue, setFilterValue] = useState('');
+  const [isActiveSearch, setIsActiveSearch] = useState(false);
+
+  const [filteredDetailResults, setFilteredDetailResults] = useState<
+    IEpisode[] | undefined
+  >([]);
+
+  useEffect(() => {
+    if (!isActiveSearch) setFilterValue('');
+    if (podcastDetail?.episodes != null) {
+      let filteredResults = podcastDetail?.episodes.filter(
+        (episode) =>
+          episode.title.toLowerCase().includes(filterValue.toLowerCase()) ||
+          episode.topic.toLowerCase().includes(filterValue.toLowerCase()),
+      );
+      let sortedData = [...filteredResults];
+      switch (orderBy) {
+        case 'title':
+          sortedData.sort((a, b) => a.title.localeCompare(b.title));
+          break;
+        case 'date':
+          sortedData.sort(
+            (a, b) =>
+              new Date(b.releaseDate).getTime() -
+              new Date(a.releaseDate).getTime(),
+          );
+          break;
+        case 'duration':
+          sortedData.sort((a, b) => a.duration - b.duration);
+          break;
+
+        default:
+          break;
+      }
+      setFilteredDetailResults(sortedData);
+    }
+  }, [orderBy, filterValue, isActiveSearch]);
+
   useEffect(() => {
     const getEpisodes = async (id: string) => {
       const podcast = (await getPodcastDetail(id)) || undefined;
       setPodcastDetail(podcast);
+      setFilteredDetailResults(podcast?.episodes);
     };
 
     setIsHome(false);
@@ -32,70 +75,25 @@ function Detail(): JSX.Element {
     <div>
       <h1>{podcastDetail?.title}</h1>
       <p>------------</p>
-      <table className="w-full max-w-[832px] max-h-[400px]  table-auto text-left bg-none text-white/30 font-[16px] relative">
-        <thead className="sticky top-0">
-          <tr>
-            <th key="play" className="pt-[14px] px-[14px] pb-[19px]">
-              <Typography variant="small">#</Typography>
-            </th>
-            <th key="title" className="pt-[14px] px-[14px] pb-[19px]">
-              <Typography variant="small">Title</Typography>
-            </th>
-            <th key="description" className="pt-[14px] px-[14px] pb-[19px]">
-              <Typography variant="small">Topic</Typography>
-            </th>
-            <th key="released" className="pt-[14px] px-[14px] pb-[19px]">
-              <Typography variant="small">Released</Typography>
-            </th>
-            <th key="released" className="pt-[14px] px-[14px] pb-[19px]">
-              <Typography variant="small">Reloj</Typography>
-            </th>
-          </tr>
-        </thead>
-        <tbody className="max-h-[400px] overflow-scroll">
-          {podcastDetail?.episodes.map((episode, index) => {
-            const isLast = index === podcastDetail.episodes.length - 1;
-            const classes = isLast ? 'p-4' : 'p-4 border-b border-blue-gray-50';
+      <div id="results">
+        <SubSearchBar
+          orderBy={orderBy}
+          setOrderBy={setOrderBy}
+          setFilterValue={setFilterValue}
+          isActiveSearch={isActiveSearch}
+          setIsActiveSearch={setIsActiveSearch}
+          options={[
+            { value: 'title', label: 'Title' },
+            { value: 'date', label: 'Released Date' },
+            { value: 'duration', label: 'Duration' },
+          ]}
+        />
 
-            return (
-              <tr key={id}>
-                <td className="pt-[14px] px-[14px] pb-[19px]">
-                  <Typography variant="small" className="font-medium">
-                    <Play />
-                  </Typography>
-                </td>
-                <td className="pt-[14px] px-[14px] pb-[19px] flex flex-row gap-4">
-                  <Avatar size="md" variant="rounded" src={episode.cover} />
-
-                  <div className="flex flex-col">
-                    <Typography className=" text-white">
-                      {episode.title}
-                    </Typography>
-                    <Typography variant="small" className="">
-                      {podcastDetail?.author}
-                    </Typography>
-                  </div>
-                </td>
-                <td className="pt-[14px] px-[14px] pb-[19px]">
-                  <Typography variant="small" className="">
-                    {episode.topic}
-                  </Typography>
-                </td>
-                <td className="pt-[14px] px-[14px] pb-[19px]">
-                  <Typography variant="small" className="">
-                    {formatDate(episode.releaseDate)}
-                  </Typography>
-                </td>
-                <td className="pt-[14px] px-[14px] pb-[19px]">
-                  <Typography variant="small" className="">
-                    {millisToMinutesAndSeconds(episode.duration)}
-                  </Typography>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+        <DetailTable
+          episodes={filteredDetailResults}
+          author={podcastDetail?.author}
+        />
+      </div>
     </div>
   );
 }

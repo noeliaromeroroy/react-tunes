@@ -5,10 +5,10 @@ import {
   Routes,
   NavLink,
 } from 'react-router-dom';
-import Search from './Search/SearchPage';
+import Search from './Home/HomePage';
 import Detail from './Detail/DetailPage';
 import PlayerBar from '../components/PlayerBar';
-import SearchBar from '../components/SearchBar';
+import { MainSearchBar } from '../components/MainSearchBar';
 import { PlayerProvider } from '../contexts/PlayerContext';
 
 function App(): JSX.Element {
@@ -19,7 +19,7 @@ function App(): JSX.Element {
           <PlayerBar />
           <div className="relative mx-auto flex h-full max-w-screen-md flex-col gap-0 bg-transparent">
             <section className="flex max-w-full flex-col gap-12 py-4">
-              <SearchBar />
+              <MainSearchBar />
               <Routes>
                 <Route path="/detail/:id" element={<Detail />} />
                 <Route path="/" element={<Search />} />

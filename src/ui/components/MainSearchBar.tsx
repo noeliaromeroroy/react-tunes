@@ -5,7 +5,7 @@ import { searchPodcasts } from '../../infrastructure/services/ITunesPodcastServi
 import { usePlayerContext } from '../contexts/PlayerContext';
 import { NavLink } from 'react-router-dom';
 
-const SearchBar: React.FC = () => {
+export const MainSearchBar: React.FC = () => {
   const { setResults, isHome, setFilteredResults } = usePlayerContext();
 
   const handleKeyDown = async (
@@ -35,5 +35,3 @@ const SearchBar: React.FC = () => {
     </div>
   );
 };
-
-export default SearchBar;
