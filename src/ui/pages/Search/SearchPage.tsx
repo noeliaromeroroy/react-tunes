@@ -1,26 +1,67 @@
 import React, { useEffect, useState } from 'react';
 
 import '../../../assets/styles/index.css';
-import { useSearch } from '../../contexts/PlayerContext';
+import { usePlayerContext } from '../../contexts/PlayerContext';
 import {
   Avatar,
   Typography,
-  Button,
   Input,
   Select,
   Option,
+  Button,
 } from '@material-tailwind/react';
 import Play from '../../../assets/svg/play-icon.svg';
+import Pause from '../../../assets/svg/pause-icon.svg';
 import SearchIcon from '../../../assets/svg/search-icon.svg';
 import { NavLink } from 'react-router-dom';
+import { IPodcast } from '../../../domain/models/interfaces/iPodcast.types';
+import { getPodcastDetail } from '../../../infrastructure/services/ITunesPodcastService';
 
 function Search(): JSX.Element {
-  const { results, setIsHome, filteredResults, setFilteredResults } =
-    useSearch();
+  const {
+    results,
+    setIsHome,
+    filteredResults,
+    setFilteredResults,
+    setActivePodcast,
+    activePodcast,
+    isPlaying,
+    setIsPlaying,
+    audio,
+    setAudio,
+  } = usePlayerContext();
 
   const [orderBy, setOrderBy] = useState('');
   const [filterValue, setFilterValue] = useState('');
-  const [isActiveSearch, setIsActiveSearch] = useState(false);
+  const [isActiveSearch] = useState(false);
+
+  function togglePlay() {
+    if (isPlaying) {
+      setIsPlaying(false);
+    } else {
+      setIsPlaying(true);
+    }
+  }
+
+  function playPodcast() {
+    setIsPlaying(true);
+  }
+
+  function resetPodcast() {
+    setActivePodcast(null);
+    setIsPlaying(false);
+  }
+
+  const selectPodcast = async (id: string) => {
+    resetPodcast();
+
+    const podcast = await getPodcastDetail(id);
+    setActivePodcast(podcast);
+    const newAudio = new Audio(podcast?.episodes[0].episodeUrl);
+    setAudio(newAudio);
+
+    playPodcast();
+  };
 
   useEffect(() => {
     setIsHome(true);
@@ -28,7 +69,6 @@ function Search(): JSX.Element {
 
   useEffect(() => {
     if (!isActiveSearch) setFilterValue('');
-
     let filteredResults = results.filter(
       (podcast) =>
         podcast.title.toLowerCase().includes(filterValue.toLowerCase()) ||
@@ -111,15 +151,7 @@ function Search(): JSX.Element {
           <tbody className="max-h-[400px] overflow-scroll">
             {filteredResults.map(
               (
-                {
-                  id,
-                  title,
-                  author,
-                  coverImageUrl,
-                  description,
-                  releaseDate,
-                  feedUrl,
-                },
+                { id, coverImageUrl, title, author, description, releaseDate },
                 index,
               ) => {
                 const isLast = index === filteredResults.length - 1;
@@ -130,9 +162,22 @@ function Search(): JSX.Element {
                 return (
                   <tr key={id}>
                     <td className="pt-[14px] px-[14px] pb-[19px]">
-                      <Typography variant="small" className="font-medium">
-                        <Play />
-                      </Typography>
+                      {activePodcast?.id !== id ||
+                      activePodcast === undefined ? (
+                        <Button
+                          className="bg-transparent p-0 y-0"
+                          onClick={() => selectPodcast(id)}
+                        >
+                          <Play />
+                        </Button>
+                      ) : (
+                        <Button
+                          className="bg-transparent p-0 y-0"
+                          onClick={() => togglePlay()}
+                        >
+                          {isPlaying ? <Pause /> : <Play />}
+                        </Button>
+                      )}
                     </td>
                     <td className="pt-[14px] px-[14px] pb-[19px] flex flex-row gap-4">
                       <Avatar size="md" variant="rounded" src={coverImageUrl} />

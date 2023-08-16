@@ -2,7 +2,7 @@
   @apply fixed bottom-0 flex w-full flex-row items-center justify-between bg-black z-10;
 }
 .podcastDetail {
-  @apply flex h-full flex-row justify-center gap-6;
+  @apply flex h-[110px] flex-row justify-center gap-6 min-w-[300px];
 }
 
 .podcastTitle {

@@ -1,4 +1,3 @@
-import { IEpisode } from '../../domain/models/interfaces/iEpisode.types';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 
 export const searchPodcasts = async (term: string): Promise<IPodcast[]> => {
@@ -14,6 +13,13 @@ export const searchPodcasts = async (term: string): Promise<IPodcast[]> => {
   try {
     url.search = new URLSearchParams(params as any).toString();
     const response = await fetch(url.toString());
+
+    if (!response.ok) {
+      throw new Error(
+        `iTunes Error: ${response.status} ${response.statusText}`,
+      );
+    }
+
     const data = await response.json();
 
     return data.results.map((result: any) => ({
@@ -32,22 +38,30 @@ export const searchPodcasts = async (term: string): Promise<IPodcast[]> => {
   }
 };
 
-export const getPodcastDetail = async (id: string): Promise<IPodcast> => {
+export const getPodcastDetail = async (
+  id: string,
+): Promise<IPodcast | null> => {
   try {
     const response = await fetch(
       `https://itunes.apple.com/lookup?id=${id}&media=podcast&entity=podcastEpisode&limit=100`,
     );
 
     if (!response.ok) {
-      throw new Error(`Error connecting with iTunes: ${response.status}`);
+      throw new Error(
+        `iTunes Error: ${response.status} ${response.statusText}`,
+      );
     }
 
     const data = await response.json();
 
+    if (data.resultCount === 0) {
+      throw new Error('Podcast not found');
+    }
+
     const podcastDetail: IPodcast = {
       id: id,
       title: data.results[0].collectionName,
-      description: '',
+      description: data.results[0].collectionCensoredName,
       author: data.results[0].artistName,
       episodes: [],
       coverImageUrl: data.results[0].artworkUrl600,
@@ -58,11 +72,13 @@ export const getPodcastDetail = async (id: string): Promise<IPodcast> => {
     data.results.shift();
 
     podcastDetail.episodes = data.results.map((result: any) => ({
-      id: result.trackId,
+      id: result.trackId.toString(),
       title: result.trackName,
-      topic: result.shortDescription,
+      topic: result.description,
       duration: result.trackTimeMillis,
+      cover: result.artworkUrl600,
       releaseDate: result.releaseDate,
+      episodeUrl: result.episodeUrl,
     }));
 
     return podcastDetail;

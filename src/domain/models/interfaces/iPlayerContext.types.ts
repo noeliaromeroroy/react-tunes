@@ -8,4 +8,10 @@ export interface PlayerContextType {
     setFilteredResults: React.Dispatch<React.SetStateAction<IPodcast[]>>;
     isHome: boolean;
     setIsHome: React.Dispatch<React.SetStateAction<boolean>>;
+    activePodcast: IPodcast | null;
+    setActivePodcast: React.Dispatch<React.SetStateAction<IPodcast | null>>;
+    isPlaying: boolean;
+    setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+    audio: HTMLAudioElement | null;
+    setAudio: React.Dispatch<HTMLAudioElement | null>;
 }

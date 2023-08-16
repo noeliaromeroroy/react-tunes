@@ -2,11 +2,11 @@ import React from 'react';
 import SearchIcon from '../../assets/svg/search-icon.svg';
 import { Input } from '@material-tailwind/react';
 import { searchPodcasts } from '../../infrastructure/services/ITunesPodcastService';
-import { useSearch } from '../contexts/PlayerContext';
+import { usePlayerContext } from '../contexts/PlayerContext';
 import { NavLink } from 'react-router-dom';
 
 const SearchBar: React.FC = () => {
-  const { setResults, isHome, setFilteredResults } = useSearch();
+  const { setResults, isHome, setFilteredResults } = usePlayerContext();
 
   const handleKeyDown = async (
     event: React.KeyboardEvent<HTMLInputElement>,
