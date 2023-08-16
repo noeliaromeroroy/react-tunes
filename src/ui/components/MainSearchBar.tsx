@@ -4,6 +4,7 @@ import { Input } from '@material-tailwind/react';
 import { searchPodcasts } from '../../infrastructure/services/ITunesPodcastService';
 import { usePlayerContext } from '../contexts/PlayerContext';
 import { NavLink } from 'react-router-dom';
+import styles from './MainSearchBar.module.css';
 
 export const MainSearchBar: React.FC = () => {
   const { setResults, isHome, setFilteredResults } = usePlayerContext();
@@ -22,14 +23,17 @@ export const MainSearchBar: React.FC = () => {
   };
 
   return (
-    <div className="Search">
+    <div className={styles.MainSearchBar}>
       {!isHome && <NavLink to="/">Volver</NavLink>}
       <Input
+        className={`${styles.input} placeholder-gray`}
         id="search-podcast"
         placeholder="podcast"
         variant="static"
+        labelProps={{
+          className: styles.placeholder,
+        }}
         onKeyDown={handleKeyDown}
-        icon={<SearchIcon />}
         crossOrigin={undefined}
       />
     </div>

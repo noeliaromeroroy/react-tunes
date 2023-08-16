@@ -1,19 +1,28 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,500;1,700;1,800&family=Quicksand:wght@300;400;500;600&display=swap');
 body {
-  @apply bg-blue-gray-900 text-white;
+  @apply bg-body bg-home-gradient bg-cover bg-no-repeat h-full;
+}
+.containerApp {
+  @apply w-full flex flex-row justify-center;
 }
 .welcome {
   @apply text-white text-2xl font-bold;
 }
-.Search input {
-  @apply w-full rounded-[15px] !border-0 bg-black/50 pr-[5px] !py-6 pl-12 font-normal text-gray-50 hover:border-white;
-}
-.Search .grid {
-  @apply left-4 top-5 text-white;
-}
+
 .after\:transition-transform::after {
   @apply !content-none;
+}
+.labelInput {
+  @apply before:content-none after:content-none;
+}
+@layer utilities {
+  .placeholderGray::placeholder {
+    @apply text-white/40;
+  }
+}
+.input {
+  @apply rounded-[15px] !border-0 bg-black/50 font-normal text-gray-50 hover:border-white;
 }

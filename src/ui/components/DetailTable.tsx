@@ -72,7 +72,8 @@ export const DetailTable: React.FC<DetailTableProps> = ({
 
                 <div className="flex flex-col">
                   <Typography className=" text-white">
-                    {episode.title}
+                    {episode.title.slice(0, 25)}{' '}
+                    {episode.title.length > 25 && '...'}
                   </Typography>
                   <Typography variant="small" className="">
                     {author}
@@ -81,7 +82,8 @@ export const DetailTable: React.FC<DetailTableProps> = ({
               </td>
               <td className="pt-[14px] px-[14px] pb-[19px]">
                 <Typography variant="small" className="">
-                  {episode.topic}
+                  {episode.topic.slice(0, 30)}{' '}
+                  {episode.title.length > 25 && '...'}
                 </Typography>
               </td>
               <td className="pt-[14px] px-[14px] pb-[19px]">

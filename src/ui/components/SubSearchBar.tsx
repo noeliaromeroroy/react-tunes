@@ -1,6 +1,7 @@
 import React from 'react';
 import { Input, Select, Option } from '@material-tailwind/react';
 import SearchIcon from '../../assets/svg/search-icon.svg';
+import styles from './SubSearchBar.module.css';
 
 interface SubSearchBarProps {
   orderBy: string;
@@ -20,36 +21,38 @@ export const SubSearchBar: React.FC<SubSearchBarProps> = ({
   options,
 }) => {
   return (
-    <div className="flex flex-row justify-end gap-3 w-full">
-      {isActiveSearch && (
-        <Input
-          type="static"
-          onChange={(e) => setFilterValue(e.target.value)}
-          labelProps={{
-            className: 'before:content-none after:content-none',
+    <div id="SubSearchBar" className={styles.SubSearchBar}>
+      <div className={styles.containerSearch}>
+        {isActiveSearch && (
+          <Input
+            type="static"
+            placeholder="search in results"
+            onChange={(e) => setFilterValue(e.target.value)}
+            labelProps={{
+              className: 'labelInput',
+            }}
+            name="filterTable"
+            crossOrigin=""
+            className="input placeholderGray"
+          />
+        )}
+
+        <div
+          onClick={() => {
+            setIsActiveSearch(true);
           }}
-          name="filterTable"
-          crossOrigin=""
-          className="text-white !border-none focus:!border-white/50 bg-black/80 focus:!border-none focus:!border-t w-[100px]"
-        />
-      )}
-
-      <div
-        onClick={() => {
-          setIsActiveSearch(true);
-        }}
-      >
-        <SearchIcon />
+        >
+          <SearchIcon />
+        </div>
       </div>
-
       <div>
         <Select
           value={orderBy}
           onChange={(value) => setOrderBy(value || '')}
-          className="text-white bg-transparent border-none"
+          className={`${styles.selectOrder} placeholderGray`}
           label="Order by"
           labelProps={{
-            className: 'before:content-none after:content-none text-white',
+            className: 'labelInput',
           }}
         >
           {options.map((option) => (

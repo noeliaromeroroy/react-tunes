@@ -47,23 +47,26 @@ function Search(): JSX.Element {
   }, [orderBy, filterValue, isActiveSearch]);
 
   return (
-    <div>
-      <div id="results">
-        <SubSearchBar
-          orderBy={orderBy}
-          setOrderBy={setOrderBy}
-          setFilterValue={setFilterValue}
-          isActiveSearch={isActiveSearch}
-          setIsActiveSearch={setIsActiveSearch}
-          options={[
-            { value: 'title', label: 'Title' },
-            { value: 'author', label: 'Author' },
-            { value: 'date', label: 'Released Date' },
-          ]}
-        />
-
+    <div id="Home">
+      <SubSearchBar
+        orderBy={orderBy}
+        setOrderBy={setOrderBy}
+        setFilterValue={setFilterValue}
+        isActiveSearch={isActiveSearch}
+        setIsActiveSearch={setIsActiveSearch}
+        options={[
+          { value: 'title', label: 'Title' },
+          { value: 'author', label: 'Author' },
+          { value: 'date', label: 'Released Date' },
+        ]}
+      />
+      {filteredResults.length > 0 ? (
         <HomeTable podcasts={filteredResults} />
-      </div>
+      ) : (
+        <h1 className="text-white/40">
+          ¡Comienza a buscar tu podcast favorito con ReactTunes!
+        </h1>
+      )}
     </div>
   );
 }

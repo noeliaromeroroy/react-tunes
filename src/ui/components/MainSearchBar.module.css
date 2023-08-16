@@ -1,0 +1,10 @@
+.MainSearchBar {
+  @apply flex flex-row justify-end pt-5 gap-4 w-full h-24 items-start;
+}
+
+.input {
+  @apply w-full rounded-[15px] !border-0 bg-black/50 pr-[5px] !py-6 pl-14 font-normal text-gray-50 hover:border-white bg-search bg-no-repeat bg-left-20px;
+}
+.input .peer:placeholder-shown {
+  @apply !text-white/40 uppercase;
+}
