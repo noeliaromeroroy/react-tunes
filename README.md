@@ -1,59 +1,104 @@
-# ReactTunes App: Dive into the Waves of Sound! 🌊
-Welcome to ReactTunes, your pocket-sized portal to the pulsating world of podcasts! Crafted with love using React, this app is your ticket to tune into tantalizing talks and mesmerizing music. Ready to amplify your audio adventure? Let's hit play! 🚀
+# Bienvenido a React Tunes!  🚀
+
+React Tunes es una aplicación web que permite a los usuarios buscar y reproducir podcasts utilizando la API de iTunes.
 
 
 ## Features
 
-🚀 **Fast & Fluid**: Built with React, ReactTunes offers a seamless and responsive experience. Navigate through podcasts with ease!
+🚀 **Rápido & Fluido:** Construido con React, ReactTunes ofrece una experiencia ágil y responsive. ¡Navega por los podcasts con facilidad!
 
-🌍 **Universal Access**: Dive into a vast ocean of podcasts from around the world. Whether you're into music, talks, or interviews, ReactTunes has got you covered.
+🎨 **Diseño Elegante:** Una interfaz amigable diseñada para mejorar tu experiencia auditiva. Encuentra y reproduce tus podcasts favoritos sin complicaciones.
 
-🎨 **Sleek Design**: A user-friendly interface designed to enhance your listening experience. Find and play your favorite podcasts without any fuss.
+📱 **Adaptado para Móviles:** ¡Lleva tus podcasts contigo! ReactTunes está optimizado tanto para dispositivos de escritorio como móviles.
 
-📱 **Mobile-Friendly**: Take your podcasts on the go! ReactTunes is optimized for both desktop and mobile devices.
+🔍 **Búsqueda Potente:** Encuentra rápidamente los podcasts que más te gusta con su eficiente función de búsqueda. ¡Descubrir nuevo contenido nunca ha sido tan fácil!
 
-🔍 **Powerful Search**: Quickly find the podcasts you love with our efficient search feature. Discovering new content has never been easier!
+## Tecnologías y Librerías
 
-## Frameworks and libraries
+- [**React**](https://reactjs.org/): Librería de JavaScript para construir interfaces de usuario.
+- [**TypeScript**](https://www.typescriptlang.org/): Superset de JavaScript que añade tipado estático.
+- [**Webpack**](https://webpack.js.org/): Empaquetador de módulos para aplicaciones JavaScript modernas.
+- [**Tailwind CSS**](https://tailwindcss.com/): Framework de CSS de utilidad para construir rápidamente diseños personalizados.
+- [**Moment**](https://momentjs.com/): Librería para manipular fechas en JavaScript.
+- [**Material Tailwind**](https://www.material-tailwind.com/): Componentes React para Material Tailwind.
+- [**React Router DOM**](https://reactrouter.com/en/main): Enrutamiento y navegación para aplicaciones React.
+- [**Jest**](https://jestjs.io/) y [**Cypress**](https://www.cypress.io/): Herramientas de testing para pruebas unitarias y end-to-end respectivamente.
+- [**ESLint**](https://eslint.org/) y [**Prettier**](https://prettier.io/): Herramientas para asegurar la calidad y consistencia del código.
 
-- [**React**](https://reactjs.org/)
-- [**TypeScript**](https://www.typescriptlang.org/)
-- [**Tailwind CSS**](https://tailwindcss.com/)
-- [**Material Tailwind**](https://www.material-tailwind.com/)
+### ¿Por qué Material UI?
 
-## Install instructions
+Esta biblioteca combina la filosofía y diseño de Material Design con la flexibilidad y simplicidad de Tailwind CSS. La elección de Material Tailwind para este proyecto se basó en varias consideraciones:
 
-### Clone the project
+- **Incompatibilidad de Material-UI con React 18**: Una de las principales razones para optar por Material Tailwind fue que Material-UI, otra popular biblioteca de diseño basada en Material Design, no es compatible con React 18 en el momento de desarrollo. Esta incompatibilidad habría requerido hacer downgrades de varias librerías o utilizar el flag --legacy-peer-deps durante la instalación, una práctica que prefiero evitar ya que puede llevar a inestabilidades y problemas de dependencia en el proyecto.
 
-To install ReactTunes you can clone the repository:
+- **Consistencia con Material Design**: Material Design, desarrollado por Google, es un lenguaje de diseño que combina principios de diseño clásicos con innovación tecnológica. Al seguir estas directrices, se garantiza una experiencia de usuario coherente y familiar para los usuarios en diferentes plataformas y aplicaciones.
 
-    $ git clone https://github.com/noeliaromeroroy/react-tunes
+- **Flexibilidad de Tailwind CSS**: Tailwind es un framework de CSS de utilidad que permite a los desarrolladores construir diseños personalizados rápidamente sin salir del HTML. Esto significa que se puede tener un control granular sobre el diseño sin tener que escribir CSS desde cero o luchar contra estilos predeterminados.
 
-### Go to folder
+- **Componentes Preconstruidos**: Material Tailwind ofrece una serie de componentes preconstruidos que siguen las directrices de Material Design. Esto acelera el proceso de desarrollo, ya que no es necesario construir cada componente desde cero.
 
+- **Personalización**: Aunque Material Tailwind proporciona estilos predeterminados basados en Material Design, la integración con Tailwind permite una personalización fácil y rápida. Esto es ideal para proyectos que quieren mantenerse fieles a las directrices de Material Design pero también quieren tener su propia identidad visual.
+
+- **Experiencia Previa y Estabilidad**: La familiaridad previa con Material Tailwind y su estabilidad y compatibilidad con las tecnologías actuales fueron factores decisivos en la elección de esta biblioteca para el proyecto.
+
+
+## Cómo empezar
+
+### Clonar el repositorio:
+
+    $ git clone https://github.com/noeliaromeroroy/react-tunes.git
     $ cd react-tunes
 
-### `npm i`
+### Instalar dependencias:
 
-Next, enter the project's root directory and install the project dependencies:
+    $ npm install
 
-    $ npm i
+## Ejecutar el proyecto:
 
-### `npm start`
+    $ npm run start
 
-Runs the app in the development mode.
+Esto iniciará el servidor de desarrollo y abrirá la aplicación en tu navegador predeterminado.
 
-    $ npm start
 
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## APIs utilizadas
 
-### `npm run build`
+- [**iTunes Search API**](https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html#//apple_ref/doc/uid/TP40017632-CH5-SW1) Utilizada para buscar y obtener detalles de podcasts.
 
-Builds the app for production to the `build` folder.\
+## Pruebas (Tests)
+En este proyecto, se ha dado prioridad a la calidad del código y a asegurar que las funcionalidades clave funcionen como se espera. Para ello, se han implementado tanto pruebas unitarias como pruebas E2E.
 
-    $ npm run build
+### Pruebas Unitarias
 
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Las pruebas unitarias se han realizado utilizando Jest. Estas pruebas se centran en las funcionalidades esenciales relacionadas con la búsqueda de podcasts y la obtención de detalles de un podcast específico.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Para ejecutar las pruebas unitarias, puedes usar el siguiente comando:
+
+    $ npm run test
+
+### Pruebas E2E
+
+Las pruebas E2E se han realizado utilizando Cypress. Estas pruebas simulan la interacción del usuario con la aplicación, asegurando que la navegación y las funcionalidades clave funcionen como se espera.
+
+Estas pruebas garantizan que las funcionalidades clave de la aplicación, como la búsqueda, reproducción y navegación, funcionen correctamente en diferentes escenarios.
+
+Para ejecutar las pruebas E2E, puedes usar el siguiente comando:
+
+    $ npx cypress open
+
+## TODOS - Pendientes
+
+Aunque el proyecto ha alcanzado un nivel funcional y estético satisfactorio, siempre hay espacio para mejorar y optimizar. Algunas de las mejoras que se podrían implementar en futuras versiones incluyen:
+
+- **Diseño Pixel Perfect**: Aunque se ha trabajado estrechamente con el prototipo de Figma proporcionado, se podría refinar aún más la interfaz para asegurar una correspondencia pixel perfect con el diseño original. Esto garantizaría una fidelidad absoluta al diseño previsto y mejoraría la experiencia visual del usuario.
+
+- **Identificación de Episodios en Reproducción**: Actualmente, aunque el usuario puede reproducir episodios desde la tabla, no hay una indicación visual clara de qué episodio está sonando en un momento dado. Sería útil implementar un indicador (como un icono o cambio de color) que señale el episodio que está en reproducción. Esto proporcionaría una referencia visual rápida para el usuario y mejoraría la navegación y experiencia general.
+
+- **Refactorización y Optimización de TailwindCSS:**
+
+    - **Estructura de Tailwind**: Se busca mejorar la estructura actual de Tailwind en el proyecto, con el objetivo de tematizar más los componentes y asegurar una coherencia estilística en toda la aplicación.
+    - **Refactorización**: Es necesario revisar y, si es necesario, refactorizar ciertas partes del código para asegurar una implementación más limpia y eficiente de Tailwind.
+    - **Clases Inline**: Aunque se ha hecho un esfuerzo por mantener el código limpio, todavía hay algunas clases inline que se podrían trasladar a archivos de estilos o tematizar para mejorar la legibilidad y mantenibilidad del código.
+
+- **Refactorización**: Aunque se ha tenido especial cuidado en mantener un código ordenado y escalable, siempre hay espacio para mejorar. Se podría considerar un refactor de algunos componentes para optimizar aún más la estructura del código y mejorar la mantenibilidad a largo plazo.
+
+- **Implementación de sistema de caché**: Me hubiera gustado implementar un sistema de caché para almacenar información de las búsquedas y optimizar el rendimiento. Reduciría así la necesidad de hacer peticiones repetidas al servidor o API, lo que a su vez podría mejorar el rendimiento y la experiencia del usuario.

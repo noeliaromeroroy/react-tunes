@@ -1,6 +1,8 @@
 {
   "name": "react-tunes",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "Find and play your favorite podcasts.",
+  "author": "Noelia Romero <noeliaromeroroy@gmail.com> (https://www.linkedin.com/in/noeliaromeroroy/)",
   "private": true,
   "dependencies": {
     "@material-tailwind/react": "^2.1.0",
