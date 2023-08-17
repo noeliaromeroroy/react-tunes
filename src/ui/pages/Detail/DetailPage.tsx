@@ -16,12 +16,12 @@ import { DetailTable } from '../../components/DetailTable';
 
 function Detail(): JSX.Element {
   const { id } = useParams();
-  const { setIsHome, isPlaying, audio, setIsPlaying } = usePlayerContext();
-  const [podcastDetail, setPodcastDetail] = useState<IPodcast>();
+  const { setIsHome, activePodcast } = usePlayerContext();
 
   const [orderBy, setOrderBy] = useState('');
   const [filterValue, setFilterValue] = useState('');
   const [isActiveSearch, setIsActiveSearch] = useState(false);
+  const [detailedPodcast, setDetailedPodcast] = useState<IPodcast>();
 
   const [filteredDetailResults, setFilteredDetailResults] = useState<
     IEpisode[] | undefined
@@ -29,8 +29,8 @@ function Detail(): JSX.Element {
 
   useEffect(() => {
     if (!isActiveSearch) setFilterValue('');
-    if (podcastDetail?.episodes != null) {
-      let filteredResults = podcastDetail?.episodes.filter(
+    if (activePodcast?.episodes != null) {
+      let filteredResults = activePodcast?.episodes.filter(
         (episode) =>
           episode.title.toLowerCase().includes(filterValue.toLowerCase()) ||
           episode.topic.toLowerCase().includes(filterValue.toLowerCase()),
@@ -60,9 +60,11 @@ function Detail(): JSX.Element {
 
   useEffect(() => {
     const getEpisodes = async (id: string) => {
-      const podcast = (await getPodcastDetail(id)) || undefined;
-      setPodcastDetail(podcast);
-      setFilteredDetailResults(podcast?.episodes);
+      const podcast = (await getPodcastDetail(id)) || null;
+      if (podcast != null) {
+        setDetailedPodcast(podcast);
+        setFilteredDetailResults(podcast?.episodes);
+      }
     };
 
     setIsHome(false);
@@ -73,27 +75,29 @@ function Detail(): JSX.Element {
 
   return (
     <div>
-      <h1>{podcastDetail?.title}</h1>
-      <p>------------</p>
-      <div id="results">
-        <SubSearchBar
-          orderBy={orderBy}
-          setOrderBy={setOrderBy}
-          setFilterValue={setFilterValue}
-          isActiveSearch={isActiveSearch}
-          setIsActiveSearch={setIsActiveSearch}
-          options={[
-            { value: 'title', label: 'Title' },
-            { value: 'date', label: 'Released Date' },
-            { value: 'duration', label: 'Duration' },
-          ]}
-        />
+      {detailedPodcast && (
+        <>
+          <h1>{detailedPodcast.title}</h1>
+          <img src={detailedPodcast.coverImageUrl} />
+          <p>------------</p>
+          <div id="results">
+            <SubSearchBar
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              setFilterValue={setFilterValue}
+              isActiveSearch={isActiveSearch}
+              setIsActiveSearch={setIsActiveSearch}
+              options={[
+                { value: 'title', label: 'Title' },
+                { value: 'date', label: 'Released Date' },
+                { value: 'duration', label: 'Duration' },
+              ]}
+            />
 
-        <DetailTable
-          episodes={filteredDetailResults}
-          author={podcastDetail?.author}
-        />
-      </div>
+            <DetailTable podcast={detailedPodcast} />
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -4,10 +4,10 @@ import React, {
   useState,
   ReactNode,
   useEffect,
+  useRef,
 } from 'react';
 import { PlayerContextType } from '../../domain/models/interfaces/iPlayerContext.types';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
-import { isPromise } from 'util/types';
 import { getPodcastDetail } from '../../infrastructure/services/ITunesPodcastService';
 
 const PlayerContext = createContext<PlayerContextType>({
@@ -21,13 +21,10 @@ const PlayerContext = createContext<PlayerContextType>({
   setActivePodcast: (value: React.SetStateAction<IPodcast | null>) => null,
   isPlaying: false,
   setIsPlaying: (value: React.SetStateAction<boolean>) => false,
-  audio: null,
-  setAudio: (value: React.SetStateAction<HTMLAudioElement | null>) => null,
   togglePlay: () => {},
-  playPodcast: () => {},
-  resetPodcast: () => {},
   selectPodcast: (id: string) => Promise.resolve(),
-  selectEpisode: (id: string) => Promise.resolve(),
+  selectEpisode: (podcast: IPodcast, episodeUrl: string) => Promise.resolve(),
+  audio: null,
 });
 
 export const usePlayerContext = (): PlayerContextType => {
@@ -44,49 +41,43 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   const [isHome, setIsHome] = useState<boolean>(true);
   const [activePodcast, setActivePodcast] = useState<IPodcast | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const togglePlay = () => {
     setIsPlaying((prevIsPlaying) => !prevIsPlaying);
   };
 
-  const playPodcast = () => {
-    setIsPlaying(true);
-  };
-
-  const resetPodcast = () => {
-    setActivePodcast(null);
-    setIsPlaying(false);
-  };
-
   const selectPodcast = async (id: string) => {
-    resetPodcast();
+    setIsPlaying(false);
 
     const podcast = await getPodcastDetail(id);
     setActivePodcast(podcast);
-    const newAudio = new Audio(podcast?.episodes[0].episodeUrl);
-    setAudio(newAudio);
 
-    playPodcast();
+    audioRef.current = new Audio(podcast?.episodes[0].episodeUrl);
+    audioRef.current.play();
+    setIsPlaying(true);
   };
 
-  const selectEpisode = async (episodeUrl: string) => {
-    resetPodcast();
-    const newAudio = new Audio(episodeUrl);
-    setAudio(newAudio);
-    playPodcast();
+  const selectEpisode = async (podcast: IPodcast, episodeUrl: string) => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+
+    setActivePodcast(podcast);
+    audioRef.current = new Audio(episodeUrl);
+    audioRef.current.play();
+    setIsPlaying(true);
   };
 
   useEffect(() => {
-    console.log(audio, isPlaying);
-
     if (isPlaying) {
-      if (audio) {
-        audio.play();
+      if (audioRef.current) {
+        audioRef.current.play();
       }
     } else {
-      if (audio) {
-        audio.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
       }
     }
   }, [isPlaying]);
@@ -104,13 +95,10 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
         setActivePodcast,
         isPlaying,
         setIsPlaying,
-        audio,
-        setAudio,
         togglePlay,
-        playPodcast,
-        resetPodcast,
         selectPodcast,
         selectEpisode,
+        audio: audioRef.current,
       }}
     >
       {children}

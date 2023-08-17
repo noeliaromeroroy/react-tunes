@@ -12,11 +12,8 @@ export interface PlayerContextType {
     setActivePodcast: React.Dispatch<React.SetStateAction<IPodcast | null>>;
     isPlaying: boolean;
     setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
-    audio: HTMLAudioElement | null;
-    setAudio: React.Dispatch<HTMLAudioElement | null>;
     togglePlay: () => void;
-    playPodcast: () => void;
-    resetPodcast: () => void;
     selectPodcast: (id: string) => Promise<void>;
-    selectEpisode: (id: string) => Promise<void>;
+    selectEpisode: (podcast: IPodcast, episodeUrl: string) => Promise<void>;
+    audio: HTMLAudioElement | null;
 }

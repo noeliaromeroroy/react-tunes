@@ -1,25 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 import { Avatar, Button, Typography } from '@material-tailwind/react';
 import { formatDate, millisToMinutesAndSeconds } from '../helpers/dateHelper';
-import { NavLink } from 'react-router-dom';
 import Play from '../../assets/svg/play-icon.svg';
 import Pause from '../../assets/svg/pause-icon.svg';
-import { getPodcastDetail } from '../../infrastructure/services/ITunesPodcastService';
 import { usePlayerContext } from '../contexts/PlayerContext';
-import { IEpisode } from '../../domain/models/interfaces/iEpisode.types';
 
 interface DetailTableProps {
-  episodes: IEpisode[] | undefined;
-  author: string | undefined;
+  podcast: IPodcast;
 }
 
-export const DetailTable: React.FC<DetailTableProps> = ({
-  episodes,
-  author,
-}) => {
-  const { activePodcast, isPlaying, togglePlay, selectEpisode } =
-    usePlayerContext();
+export const DetailTable: React.FC<DetailTableProps> = ({ podcast }) => {
+  const { isPlaying, togglePlay, selectEpisode } = usePlayerContext();
+
+  const [selectedEpisode, setSelectedEpisode] = useState<string>();
 
   return (
     <table className="w-full max-w-[832px] max-h-[400px]  table-auto text-left bg-none text-white/30 font-[16px] relative">
@@ -43,18 +37,20 @@ export const DetailTable: React.FC<DetailTableProps> = ({
         </tr>
       </thead>
       <tbody className="max-h-[400px] overflow-scroll">
-        {episodes?.map((episode, index) => {
-          const isLast = index === episodes.length - 1;
+        {podcast.episodes?.map((episode, index) => {
+          const isLast = index === podcast.episodes.length - 1;
           const classes = isLast ? 'p-4' : 'p-4 border-b border-blue-gray-50';
 
           return (
             <tr key={episode.id}>
               <td className="pt-[14px] px-[14px] pb-[19px]">
-                {activePodcast?.id !== episode.id ||
-                activePodcast === undefined ? (
+                {selectedEpisode !== episode.id ? (
                   <Button
                     className="bg-transparent p-0 y-0"
-                    onClick={() => selectEpisode(episode.episodeUrl)}
+                    onClick={() => {
+                      selectEpisode(podcast, episode.episodeUrl);
+                      setSelectedEpisode(episode.id);
+                    }}
                   >
                     <Play />
                   </Button>
@@ -76,7 +72,7 @@ export const DetailTable: React.FC<DetailTableProps> = ({
                     {episode.title.length > 25 && '...'}
                   </Typography>
                   <Typography variant="small" className="">
-                    {author}
+                    {podcast.author}
                   </Typography>
                 </div>
               </td>
