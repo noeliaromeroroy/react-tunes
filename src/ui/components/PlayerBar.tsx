@@ -138,7 +138,11 @@ const PlayerBar: React.FC = () => {
 
   const playNextEpisode = () => {
     const index = activeEpisodeIndex;
-    if (activePodcast && audio && (index - 1 >= 0 || isShuffleActivated)) {
+    if (
+      activePodcast &&
+      audio &&
+      (index - 1 >= 0 || isShuffleActivated || isRepeatActivated)
+    ) {
       if (isRepeatActivated) {
         setCurrentAudio(activePodcast.episodes[index].episodeUrl);
       } else {
@@ -171,7 +175,10 @@ const PlayerBar: React.FC = () => {
               src={activePodcast.coverImageUrl}
             />
             <div className="flex flex-col justify-center">
-              <div className={styles.podcastTitle}>
+              <div
+                className={styles.podcastTitle}
+                data-cy="title-active-podcast"
+              >
                 {activePodcast.episodes[activeEpisodeIndex].title.slice(0, 35)}{' '}
                 {activePodcast.episodes[activeEpisodeIndex].title.length > 35 &&
                   '...'}
@@ -189,6 +196,7 @@ const PlayerBar: React.FC = () => {
       >
         <div className={styles.controls}>
           <Button
+            data-cy="btn-shuffle"
             disabled={!activePodcast}
             className={`${isShuffleActivated ? '!bg-active/50' : ''}`}
             onClick={() => toggleShuffle()}
@@ -197,6 +205,7 @@ const PlayerBar: React.FC = () => {
           </Button>
 
           <Button
+            data-cy="btn-prev"
             onClick={() => playPreviousEpisode()}
             disabled={
               !activePodcast ||
@@ -206,23 +215,32 @@ const PlayerBar: React.FC = () => {
             <Previous />
           </Button>
           <Button
+            data-cy="btn-play"
             className="!bg-active"
             onClick={() => togglePlay()}
             disabled={!activePodcast}
           >
-            {isPlaying && activePodcast ? <Pause /> : <Play />}
+            {isPlaying && activePodcast ? (
+              <Pause data-cy="pause-icon" />
+            ) : (
+              <Play data-cy="play-icon" />
+            )}
           </Button>
           <Button
+            data-cy="btn-next"
             onClick={() => playNextEpisode()}
             disabled={
               !activePodcast ||
-              (activeEpisodeIndex === 0 && !isShuffleActivated)
+              (activeEpisodeIndex === 0 &&
+                !isShuffleActivated &&
+                !isRepeatActivated)
             }
           >
             <Next />
           </Button>
 
           <Button
+            data-cy="btn-repeat"
             className={`${isRepeatActivated ? '!bg-active/50' : ''}`}
             onClick={() => toggleRepeat()}
             disabled={!activePodcast}

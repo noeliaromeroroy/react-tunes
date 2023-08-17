@@ -22,7 +22,7 @@ export const DetailTable: React.FC<DetailTableProps> = ({
   const [selectedEpisode, setSelectedEpisode] = useState<string>();
 
   return (
-    <table className="Table">
+    <table className="Table" data-cy={`detail-${podcast.id}`}>
       <thead>
         <tr>
           <th key="play">#</th>
@@ -45,6 +45,7 @@ export const DetailTable: React.FC<DetailTableProps> = ({
               <td>
                 <Button
                   className="bg-transparent p-3 rounded-full"
+                  data-cy={`play-detail-${episode.id}`}
                   onClick={() => {
                     selectEpisode(podcast, episode.episodeUrl);
                     setSelectedEpisode(episode.id);

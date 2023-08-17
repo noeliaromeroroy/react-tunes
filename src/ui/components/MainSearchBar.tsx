@@ -27,13 +27,15 @@ export const MainSearchBar: React.FC = () => {
   return (
     <div className={styles.MainSearchBar}>
       {!isHome && (
-        <NavLink to="/">
-          <Back />
-        </NavLink>
+        <div data-cy="back-to-home">
+          <NavLink to="/">
+            <Back />
+          </NavLink>
+        </div>
       )}
       <Input
         className={`${styles.input} placeholder-gray`}
-        id="search-podcast"
+        data-cy="search-podcast"
         placeholder="podcast"
         variant="static"
         labelProps={{

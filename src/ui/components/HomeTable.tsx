@@ -38,6 +38,7 @@ export const HomeTable: React.FC<HomeTableProps> = ({ podcasts }) => {
                   {activePodcast?.id !== id || activePodcast === undefined ? (
                     <Button
                       className="bg-transparent p-0 y-0"
+                      data-cy={`play-${id}`}
                       onClick={() => selectPodcast(id)}
                       id={`play-${id}`}
                     >
@@ -45,6 +46,7 @@ export const HomeTable: React.FC<HomeTableProps> = ({ podcasts }) => {
                     </Button>
                   ) : (
                     <Button
+                      data-cy={`play-${id}`}
                       className="bg-transparent p-0 y-0"
                       onClick={() => togglePlay()}
                     >
@@ -56,7 +58,11 @@ export const HomeTable: React.FC<HomeTableProps> = ({ podcasts }) => {
                   <Avatar size="md" variant="rounded" src={coverImageUrl} />
 
                   <div className="flex flex-col">
-                    <NavLink to={`/detail/${id}`} className=" text-white">
+                    <NavLink
+                      to={`/detail/${id}`}
+                      className=" text-white"
+                      data-cy={`title-podcast-${id}`}
+                    >
                       {title}
                     </NavLink>
                     <Typography className="text-sm font-medium">
