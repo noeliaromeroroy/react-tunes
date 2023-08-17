@@ -16,37 +16,24 @@ export const DetailTable: React.FC<DetailTableProps> = ({ podcast }) => {
   const [selectedEpisode, setSelectedEpisode] = useState<string>();
 
   return (
-    <table className="w-full max-w-[832px] max-h-[400px]  table-auto text-left bg-none text-white/30 font-[16px] relative">
-      <thead className="sticky top-0">
+    <table className="Table">
+      <thead>
         <tr>
-          <th key="play" className="pt-[14px] px-[14px] pb-[19px]">
-            <Typography variant="small">#</Typography>
-          </th>
-          <th key="title" className="pt-[14px] px-[14px] pb-[19px]">
-            <Typography variant="small">Title</Typography>
-          </th>
-          <th key="description" className="pt-[14px] px-[14px] pb-[19px]">
-            <Typography variant="small">Topic</Typography>
-          </th>
-          <th key="released" className="pt-[14px] px-[14px] pb-[19px]">
-            <Typography variant="small">Released</Typography>
-          </th>
-          <th key="duration" className="pt-[14px] px-[14px] pb-[19px]">
-            <Typography variant="small">Reloj</Typography>
-          </th>
+          <th key="play">#</th>
+          <th key="title">Title</th>
+          <th key="description">Topic</th>
+          <th key="released">Released</th>
+          <th key="duration">Reloj</th>
         </tr>
       </thead>
-      <tbody className="max-h-[400px] overflow-scroll">
-        {podcast.episodes?.map((episode, index) => {
-          const isLast = index === podcast.episodes.length - 1;
-          const classes = isLast ? 'p-4' : 'p-4 border-b border-blue-gray-50';
-
+      <tbody>
+        {podcast.episodes?.map((episode) => {
           return (
             <tr key={episode.id}>
-              <td className="pt-[14px] px-[14px] pb-[19px]">
+              <td>
                 {selectedEpisode !== episode.id ? (
                   <Button
-                    className="bg-transparent p-0 y-0"
+                    className="bg-transparent p-3 rounded-full"
                     onClick={() => {
                       selectEpisode(podcast, episode.episodeUrl);
                       setSelectedEpisode(episode.id);
@@ -56,42 +43,32 @@ export const DetailTable: React.FC<DetailTableProps> = ({ podcast }) => {
                   </Button>
                 ) : (
                   <Button
-                    className="bg-transparent p-0 y-0"
+                    className={`${
+                      isPlaying ? 'bg-active' : 'bg-transparent'
+                    } p-3 rounded-full`}
                     onClick={() => togglePlay()}
                   >
                     {isPlaying ? <Pause /> : <Play />}
                   </Button>
                 )}
               </td>
-              <td className="pt-[14px] px-[14px] pb-[19px] flex flex-row gap-4">
+              <td className="info">
                 <Avatar size="md" variant="rounded" src={episode.cover} />
-
                 <div className="flex flex-col">
-                  <Typography className=" text-white">
+                  <Typography className="font-medium text-white">
                     {episode.title.slice(0, 25)}{' '}
                     {episode.title.length > 25 && '...'}
                   </Typography>
-                  <Typography variant="small" className="">
-                    {podcast.author}
-                  </Typography>
+
+                  {podcast.author}
                 </div>
               </td>
-              <td className="pt-[14px] px-[14px] pb-[19px]">
-                <Typography variant="small" className="">
-                  {episode.topic.slice(0, 30)}{' '}
-                  {episode.title.length > 25 && '...'}
-                </Typography>
+              <td>
+                {episode.topic.slice(0, 35)}{' '}
+                {episode.title.length > 35 && '...'}
               </td>
-              <td className="pt-[14px] px-[14px] pb-[19px]">
-                <Typography variant="small" className="">
-                  {formatDate(episode.releaseDate)}
-                </Typography>
-              </td>
-              <td className="pt-[14px] px-[14px] pb-[19px]">
-                <Typography variant="small" className="">
-                  {millisToMinutesAndSeconds(episode.duration)}
-                </Typography>
-              </td>
+              <td>{formatDate(episode.releaseDate)}</td>
+              <td>{millisToMinutesAndSeconds(episode.duration)}</td>
             </tr>
           );
         })}

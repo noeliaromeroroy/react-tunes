@@ -36,19 +36,19 @@ export const SubSearchBar: React.FC<SubSearchBarProps> = ({
 
   return (
     <div id="SubSearchBar" className={styles.SubSearchBar}>
-      <div className={styles.containerSearch}>
+      <div
+        className={`${styles.containerSearch} ${podcast ? 'flex-grow' : ''}`}
+      >
         {podcast && (
           <div className={`${styles.podcastTitle} pt-2`}>
-            <div className="flex flex-row gap-4 items-center">
-              <Button
-                className={`bg-active rounded-full !p-6 flex items-center flex-row overflow-visible`}
-                onClick={() => togglePlay(podcast)}
-              >
-                {isPlaying ? <Pause /> : <Play />}
-              </Button>
-              <h1>{podcast.title}</h1>
-              <Verified />
-            </div>
+            <Button
+              className={styles.buttonHead}
+              onClick={() => togglePlay(podcast)}
+            >
+              {isPlaying ? <Pause /> : <Play />}
+            </Button>
+            <h1>{podcast.title}</h1>
+            <Verified />
           </div>
         )}
 

@@ -1,5 +1,5 @@
 import { Avatar, Progress, Button, Slider } from '@material-tailwind/react';
-import Shufle from '../../assets/svg/shuffle-icon.svg';
+import Shuffle from '../../assets/svg/shuffle-icon.svg';
 import Previous from '../../assets/svg/previous-icon.svg';
 import Pause from '../../assets/svg/pause-icon.svg';
 import Play from '../../assets/svg/play-icon.svg';
@@ -12,10 +12,25 @@ import { useEffect, useState, useRef } from 'react';
 import { formatTime } from '../helpers/dateHelper';
 
 const PlayerBar: React.FC = () => {
-  const { activePodcast, isPlaying, setIsPlaying, audio } = usePlayerContext();
+  const {
+    activePodcast,
+    isPlaying,
+    setIsPlaying,
+    audio,
+    setCurrentAudio,
+    activeEpisodeIndex,
+    previousEpisode,
+    setPreviousEpisode,
+    nextEpisode,
+    setNextEpisode,
+    togglePlay,
+    setActiveEpisodeIndex,
+  } = usePlayerContext();
   const [currentTime, setCurrentTime] = useState('0:00');
   const [duration, setDuration] = useState('0:00');
   const [audioProgress, setAudioProgress] = useState(0);
+  const [isRepeatActivated, setIsRepeatActivated] = useState(false);
+  const [isShuffleActivated, setIsShuffleActivated] = useState(false);
   const [volume, setVolume] = useState(20);
   const isDragging = useRef(false);
 
@@ -42,6 +57,27 @@ const PlayerBar: React.FC = () => {
     }
   }, [audio]);
 
+  useEffect(() => {
+    if (activePodcast) {
+      activeEpisodeIndex === 0
+        ? setPreviousEpisode(null)
+        : setPreviousEpisode(
+            activePodcast.episodes[activeEpisodeIndex + 1].episodeUrl,
+          );
+
+      activeEpisodeIndex !== activePodcast?.episodes.length - 1
+        ? setNextEpisode(
+            activePodcast.episodes[activeEpisodeIndex - 1].episodeUrl,
+          )
+        : setNextEpisode(null);
+
+      //Repeat
+      if (isRepeatActivated) {
+        applyRepeatChanges;
+      }
+    }
+  }, [activeEpisodeIndex]);
+
   const handleSliderChange = (e: any) => {
     const percentage = parseFloat(e.target.value);
     if (audio) {
@@ -61,11 +97,51 @@ const PlayerBar: React.FC = () => {
     }
   };
 
-  const nextEpisode = () => {};
-  const previousEpisode = () => {};
+  const applyRepeatChanges = () => {
+    if (isRepeatActivated && activePodcast) {
+      setPreviousEpisode(activePodcast.episodes[activeEpisodeIndex].episodeUrl);
+      setNextEpisode(activePodcast.episodes[activeEpisodeIndex].episodeUrl);
+    }
+  };
 
-  const togglePlay = () => {
-    setIsPlaying((prevIsPlaying) => !prevIsPlaying);
+  const toggleRepeat = () => {
+    setIsRepeatActivated((prevValue) => !prevValue);
+  };
+
+  const toggleShuffle = () => {
+    setIsShuffleActivated((prevValue) => !prevValue);
+  };
+
+  const playPreviousEpisode = () => {
+    if (activePodcast && audio) {
+      const index = activeEpisodeIndex;
+      if (isRepeatActivated) {
+        setCurrentAudio(activePodcast.episodes[index].episodeUrl);
+      } else {
+        setNextEpisode(activePodcast.episodes[index].episodeUrl);
+        setPreviousEpisode(activePodcast.episodes[index + 2].episodeUrl);
+        setCurrentAudio(activePodcast.episodes[index + 1].episodeUrl);
+        setActiveEpisodeIndex(index + 1);
+      }
+    }
+  };
+
+  const playNextEpisode = () => {
+    const index = activeEpisodeIndex;
+    if (activePodcast && audio && index - 1 >= 0) {
+      if (isRepeatActivated) {
+        setCurrentAudio(activePodcast.episodes[index].episodeUrl);
+      } else {
+        if (index - 2 < 0) {
+          setNextEpisode(null);
+        } else {
+          setNextEpisode(activePodcast.episodes[index - 2].episodeUrl);
+        }
+        setPreviousEpisode(activePodcast.episodes[index].episodeUrl);
+        setCurrentAudio(activePodcast.episodes[index - 1].episodeUrl);
+        setActiveEpisodeIndex(index - 1);
+      }
+    }
   };
 
   return (
@@ -81,6 +157,12 @@ const PlayerBar: React.FC = () => {
             <div className="flex flex-col justify-center">
               <div className={styles.podcastTitl}>{activePodcast.title}</div>
               <div className={styles.podcastAuthor}>{activePodcast.author}</div>
+
+              {/*  */}
+              <div className={styles.podcastAuthor}>
+                {activePodcast.episodes[activeEpisodeIndex].title}
+              </div>
+              {/*  */}
             </div>
           </>
         )}
@@ -89,18 +171,30 @@ const PlayerBar: React.FC = () => {
       <div
         className={`${styles.controls} ${!activePodcast ? 'opacity-40' : ''}`}
       >
-        <Shufle />
-        <Button onClick={() => previousEpisode()}>
+        <Button
+          className={`${isShuffleActivated ? 'bg-indigo-400' : ''}`}
+          onClick={() => toggleShuffle()}
+        >
+          <Shuffle />
+        </Button>
+
+        <Button onClick={() => playPreviousEpisode()}>
           <Previous />
         </Button>
         <Button onClick={() => togglePlay()}>
           {isPlaying ? <Pause /> : <Play />}
         </Button>
-        <Button onClick={() => nextEpisode()}>
+        <Button onClick={() => playNextEpisode()}>
           <Next />
         </Button>
 
-        <Repeat />
+        <Button
+          className={`${isRepeatActivated ? 'bg-indigo-400' : ''}`}
+          onClick={() => toggleRepeat()}
+        >
+          <Repeat />
+        </Button>
+
         <div className={styles.progress}>
           <span>{currentTime}</span>
           <Slider

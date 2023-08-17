@@ -78,28 +78,26 @@ function Detail(): JSX.Element {
       {detailedPodcast && (
         <div className={styles.DetailedPage} id="DetailedPage">
           <img
-            className="h-[280px] w-full object-cover object-center rounded-lg"
+            className={styles.featuredImage}
             src={detailedPodcast.coverImageUrl}
             alt={detailedPodcast.title}
           />
-          ñe
-          <div id="results">
-            <SubSearchBar
-              orderBy={orderBy}
-              setOrderBy={setOrderBy}
-              setFilterValue={setFilterValue}
-              isActiveSearch={isActiveSearch}
-              podcast={detailedPodcast}
-              setIsActiveSearch={setIsActiveSearch}
-              options={[
-                { value: 'title', label: 'Title' },
-                { value: 'date', label: 'Date' },
-                { value: 'duration', label: 'Duration' },
-              ]}
-            />
 
-            <DetailTable podcast={detailedPodcast} />
-          </div>
+          <SubSearchBar
+            orderBy={orderBy}
+            setOrderBy={setOrderBy}
+            setFilterValue={setFilterValue}
+            isActiveSearch={isActiveSearch}
+            podcast={detailedPodcast}
+            setIsActiveSearch={setIsActiveSearch}
+            options={[
+              { value: 'title', label: 'Title' },
+              { value: 'date', label: 'Date' },
+              { value: 'duration', label: 'Duration' },
+            ]}
+          />
+
+          <DetailTable podcast={detailedPodcast} />
         </div>
       )}
     </>

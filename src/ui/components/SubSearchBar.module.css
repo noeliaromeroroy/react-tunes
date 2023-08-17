@@ -7,7 +7,7 @@
 }
 
 .containerSearch {
-  @apply flex flex-row gap-5 items-center;
+  @apply flex flex-row gap-5 items-center relative;
 }
 
 .orderContainer div:first-child {
@@ -24,7 +24,10 @@
   @apply !content-none;
 }
 .podcastTitle {
-  @apply flex flex-row justify-between;
+  @apply flex flex-row justify-between gap-4 items-center flex-grow;
+}
+.buttonHead {
+  @apply bg-active rounded-full !p-6 flex items-center flex-row overflow-visible;
 }
 .podcastTitle h1 {
   @apply text-3xl font-bold tracking-[-0.64] text-white self-start;

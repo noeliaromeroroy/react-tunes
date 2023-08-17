@@ -1,6 +1,5 @@
 import React, { createContext } from 'react';
 import { IPodcast } from './iPodcast.types';
-import { IpcNetConnectOpts } from 'net';
 
 export interface PlayerContextType {
     results: IPodcast[];
@@ -17,4 +16,11 @@ export interface PlayerContextType {
     selectPodcast: (id: string) => Promise<void>;
     selectEpisode: (podcast: IPodcast, episodeUrl: string) => Promise<void>;
     audio: HTMLAudioElement | null;
+    setCurrentAudio: (newAudio: string) => void;
+    activeEpisodeIndex: number;
+    setActiveEpisodeIndex: (episodeIndex: number) => void;
+    previousEpisode: string | null;
+    setPreviousEpisode: (episodeUrl: string | null) => void;
+    nextEpisode: string | null;
+    setNextEpisode: (episodeUrl: string | null) => void;
 }

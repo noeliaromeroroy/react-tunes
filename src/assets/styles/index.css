@@ -26,3 +26,19 @@ body {
 .input {
   @apply rounded-[15px] !border-0 bg-black/50 font-normal text-gray-50 hover:border-white;
 }
+
+.Table {
+  @apply w-full max-w-[832px] max-h-[400px]  table-auto text-left bg-none text-white/30 font-[16px] relative mb-[120px];
+}
+
+.Table th {
+  @apply text-sm font-semibold text-white/30 w-min;
+}
+
+.Table td {
+  @apply font-medium text-white/30 mt-1 pt-[14px] px-[14px] pb-[19px];
+}
+
+.Table .info {
+  @apply flex flex-row gap-4;
+}

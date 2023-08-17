@@ -21,7 +21,7 @@ module.exports = withMT({
       },
       backgroundImage: {
         'home-gradient':
-          'linear-gradient(0deg, rgba(10, 10, 10, 0.20) 0%, rgba(10, 10, 10, 0.20) 100%), linear-gradient(155deg, #1B1B1B 0%, #14151F 100%)',
+          'bg-[linear-gradient(rgba(10,_10,_10,_0.2),_rgba(10,_10,_10,_0.2)),_linear-gradient(132deg,_#1b1b1b_-3%,#14151f_99%)] bg-cover,_cover bg-50%_50%,_50%_50% bg-blend-normal',
         search: `url('/public/images/search.png')`,
       },
     },

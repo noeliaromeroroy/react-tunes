@@ -25,6 +25,13 @@ const PlayerContext = createContext<PlayerContextType>({
   selectPodcast: (id: string) => Promise.resolve(),
   selectEpisode: (podcast: IPodcast, episodeUrl: string) => Promise.resolve(),
   audio: null,
+  setCurrentAudio: (newAudio: string) => {},
+  activeEpisodeIndex: 0,
+  setActiveEpisodeIndex: (episodeIndex: number) => null,
+  previousEpisode: null,
+  setPreviousEpisode: (value: React.SetStateAction<string | null>) => true,
+  nextEpisode: null,
+  setNextEpisode: (value: React.SetStateAction<string | null>) => true,
 });
 
 export const usePlayerContext = (): PlayerContextType => {
@@ -40,12 +47,22 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   const [filteredResults, setFilteredResults] = useState<IPodcast[]>([]);
   const [isHome, setIsHome] = useState<boolean>(true);
   const [activePodcast, setActivePodcast] = useState<IPodcast | null>(null);
+  const [activeEpisodeIndex, setActiveEpisodeIndex] = useState<number>(0);
+  const [previousEpisode, setPreviousEpisode] = useState<string | null>(null);
+  const [nextEpisode, setNextEpisode] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  const setCurrentAudio = (newAudio: string) => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    audioRef.current = new Audio(newAudio);
+    audioRef.current.play();
+  };
+
   const togglePlay = (podcast?: IPodcast) => {
-    console.log(podcast?.title);
     if (!activePodcast) if (podcast) selectPodcast(podcast.id);
     setIsPlaying((prevIsPlaying) => !prevIsPlaying);
   };
@@ -55,8 +72,14 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
 
     const podcast = await getPodcastDetail(id);
     setActivePodcast(podcast);
-
-    audioRef.current = new Audio(podcast?.episodes[0].episodeUrl);
+    setActiveEpisodeIndex(0);
+    setPreviousEpisode(null);
+    if (activePodcast?.episodes[1].episodeUrl) {
+      setNextEpisode(activePodcast.episodes[1].episodeUrl);
+    }
+    audioRef.current = new Audio(
+      podcast?.episodes[activeEpisodeIndex].episodeUrl,
+    );
     audioRef.current.play();
     setIsPlaying(true);
   };
@@ -66,13 +89,23 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
       audioRef.current.pause();
     }
 
+    const index = podcast.episodes.findIndex(
+      (episode) => episode.episodeUrl === episodeUrl,
+    );
+
     setActivePodcast(podcast);
+    setActiveEpisodeIndex(index);
+
+    if (index === 0 && podcast?.episodes[1].episodeUrl) {
+      setNextEpisode(podcast.episodes[1].episodeUrl);
+    }
     audioRef.current = new Audio(episodeUrl);
     audioRef.current.play();
     setIsPlaying(true);
   };
 
   useEffect(() => {
+    console.log('useEffect');
     if (isPlaying) {
       if (audioRef.current) {
         audioRef.current.play();
@@ -101,6 +134,13 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
         selectPodcast,
         selectEpisode,
         audio: audioRef.current,
+        setCurrentAudio,
+        activeEpisodeIndex,
+        setActiveEpisodeIndex,
+        previousEpisode,
+        setPreviousEpisode,
+        nextEpisode,
+        setNextEpisode,
       }}
     >
       {children}

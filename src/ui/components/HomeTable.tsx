@@ -16,21 +16,13 @@ export const HomeTable: React.FC<HomeTableProps> = ({ podcasts }) => {
     usePlayerContext();
 
   return (
-    <table className="w-full max-w-[832px] max-h-[400px]  table-auto text-left bg-none text-white/30 font-[16px] relative">
-      <thead className="sticky top-0">
+    <table className="Table">
+      <thead>
         <tr>
-          <th key="play" className="pt-[14px] px-[14px] pb-[19px]">
-            <Typography variant="small">#</Typography>
-          </th>
-          <th key="title" className="pt-[14px] px-[14px] pb-[19px]">
-            <Typography variant="small">Name</Typography>
-          </th>
-          <th key="description" className="pt-[14px] px-[14px] pb-[19px]">
-            <Typography variant="small">Description</Typography>
-          </th>
-          <th key="released" className="pt-[14px] px-[14px] pb-[19px]">
-            <Typography variant="small">Released</Typography>
-          </th>
+          <th key="play">#</th>
+          <th key="title">Name</th>
+          <th key="description">Description</th>
+          <th key="released">Released</th>
         </tr>
       </thead>
       <tbody className="max-h-[400px] overflow-scroll">
@@ -39,12 +31,9 @@ export const HomeTable: React.FC<HomeTableProps> = ({ podcasts }) => {
             { id, coverImageUrl, title, author, description, releaseDate },
             index,
           ) => {
-            const isLast = index === podcasts.length - 1;
-            const classes = isLast ? 'p-4' : 'p-4 border-b border-blue-gray-50';
-
             return (
               <tr key={id}>
-                <td className="pt-[14px] px-[14px] pb-[19px]">
+                <td>
                   {activePodcast?.id !== id || activePodcast === undefined ? (
                     <Button
                       className="bg-transparent p-0 y-0"
@@ -61,28 +50,20 @@ export const HomeTable: React.FC<HomeTableProps> = ({ podcasts }) => {
                     </Button>
                   )}
                 </td>
-                <td className="pt-[14px] px-[14px] pb-[19px] flex flex-row gap-4">
+                <td className="info">
                   <Avatar size="md" variant="rounded" src={coverImageUrl} />
 
                   <div className="flex flex-col">
                     <NavLink to={`/detail/${id}`} className=" text-white">
                       {title}
                     </NavLink>
-                    <Typography variant="small" className="">
+                    <Typography className="text-sm font-medium">
                       {author}
                     </Typography>
                   </div>
                 </td>
-                <td className="pt-[14px] px-[14px] pb-[19px]">
-                  <Typography variant="small" className="">
-                    {description}
-                  </Typography>
-                </td>
-                <td className="pt-[14px] px-[14px] pb-[19px]">
-                  <Typography variant="small" className="">
-                    {formatDate(new Date(releaseDate))}
-                  </Typography>
-                </td>
+                <td>{description}</td>
+                <td>{formatDate(new Date(releaseDate))}</td>
               </tr>
             );
           },
