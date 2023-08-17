@@ -54,12 +54,21 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  const tryPlay = () => {
+    if (audioRef.current) {
+      audioRef.current.play().catch((error) => {
+        console.warn('Play interrupted. Retrying in 500ms:', error);
+        setTimeout(tryPlay, 500);
+      });
+    }
+  };
+
   const setCurrentAudio = (newAudio: string) => {
     if (audioRef.current) {
       audioRef.current.pause();
     }
     audioRef.current = new Audio(newAudio);
-    audioRef.current.play();
+    tryPlay();
   };
 
   const togglePlay = (podcast?: IPodcast) => {
