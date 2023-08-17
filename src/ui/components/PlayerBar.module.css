@@ -33,3 +33,7 @@
 .volume {
   @apply inline-flex h-6 items-center justify-start gap-[11px] px-6;
 }
+
+.PlayerBar button {
+  @apply p-2 shadow-none bg-none bg-transparent;
+}

@@ -57,15 +57,15 @@ const PlayerBar: React.FC = () => {
     }
   }, [audio]);
 
-  useEffect(() => {
+  /*  useEffect(() => {
     if (activePodcast) {
-      activeEpisodeIndex === 0
+      activeEpisodeIndex !== activePodcast?.episodes.length - 1
         ? setPreviousEpisode(null)
         : setPreviousEpisode(
             activePodcast.episodes[activeEpisodeIndex + 1].episodeUrl,
           );
 
-      activeEpisodeIndex !== activePodcast?.episodes.length - 1
+      activeEpisodeIndex === 0
         ? setNextEpisode(
             activePodcast.episodes[activeEpisodeIndex - 1].episodeUrl,
           )
@@ -76,7 +76,7 @@ const PlayerBar: React.FC = () => {
         applyRepeatChanges;
       }
     }
-  }, [activeEpisodeIndex]);
+  }, [activeEpisodeIndex]); */
 
   const handleSliderChange = (e: any) => {
     const percentage = parseFloat(e.target.value);
@@ -130,21 +130,29 @@ const PlayerBar: React.FC = () => {
   };
 
   const playPreviousEpisode = () => {
-    if (activePodcast && audio) {
-      const index = activeEpisodeIndex;
+    const index = activeEpisodeIndex;
+    if (
+      activePodcast &&
+      audio &&
+      index + 1 <= activePodcast.episodes.length - 1
+    ) {
       if (isRepeatActivated) {
         setCurrentAudio(activePodcast.episodes[index].episodeUrl);
       } else {
+        setNextEpisode(activePodcast.episodes[index].episodeUrl);
         if (isShuffleActivated) {
           const randomIndex = getRandomEpisodeIndex();
           setCurrentAudio(activePodcast.episodes[randomIndex].episodeUrl);
           setActiveEpisodeIndex(randomIndex);
         } else {
+          if (index + 2 > activePodcast.episodes.length - 1) {
+            setPreviousEpisode(null);
+          } else {
+            setPreviousEpisode(activePodcast.episodes[index + 2].episodeUrl);
+          }
           setCurrentAudio(activePodcast.episodes[index + 1].episodeUrl);
           setActiveEpisodeIndex(index + 1);
         }
-        setNextEpisode(activePodcast.episodes[index].episodeUrl);
-        setPreviousEpisode(activePodcast.episodes[index + 2].episodeUrl);
       }
     }
   };
@@ -155,20 +163,20 @@ const PlayerBar: React.FC = () => {
       if (isRepeatActivated) {
         setCurrentAudio(activePodcast.episodes[index].episodeUrl);
       } else {
-        if (index - 2 < 0) {
-          setNextEpisode(null);
-        } else {
-          if (isShuffleActivated) {
-            const randomIndex = getRandomEpisodeIndex();
-            setCurrentAudio(activePodcast.episodes[randomIndex].episodeUrl);
-            setActiveEpisodeIndex(randomIndex);
-          } else {
-            setCurrentAudio(activePodcast.episodes[index - 1].episodeUrl);
-            setActiveEpisodeIndex(index - 1);
-          }
-        }
-        setNextEpisode(activePodcast.episodes[index - 2].episodeUrl);
         setPreviousEpisode(activePodcast.episodes[index].episodeUrl);
+        if (isShuffleActivated) {
+          const randomIndex = getRandomEpisodeIndex();
+          setCurrentAudio(activePodcast.episodes[randomIndex].episodeUrl);
+          setActiveEpisodeIndex(randomIndex);
+        } else {
+          if (index - 2 < 0) {
+            setNextEpisode(null);
+          } else {
+            setNextEpisode(activePodcast.episodes[index - 2].episodeUrl);
+          }
+          setActiveEpisodeIndex(index - 1);
+          setCurrentAudio(activePodcast.episodes[index - 1].episodeUrl);
+        }
       }
     }
   };
