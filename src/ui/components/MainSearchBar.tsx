@@ -1,10 +1,11 @@
 import React from 'react';
-import Back from '../../assets/svg/back-icon.svg';
-import { Input } from '@material-tailwind/react';
-import { searchPodcasts } from '../../infrastructure/services/ITunesPodcastService';
-import { usePlayerContext } from '../contexts/PlayerContext';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { Input } from '@material-tailwind/react';
+
+import { usePlayerContext } from '../contexts/PlayerContext';
+import { searchPodcasts } from '../../infrastructure/services/ITunesPodcastService';
 import styles from './MainSearchBar.module.css';
+import Back from '../../assets/svg/back-icon.svg';
 
 export const MainSearchBar: React.FC = () => {
   const navigate = useNavigate();

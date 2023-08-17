@@ -1,4 +1,9 @@
-import { Avatar, Progress, Button, Slider } from '@material-tailwind/react';
+import { useEffect, useState, useRef } from 'react';
+import { Avatar, Button, Slider } from '@material-tailwind/react';
+
+import { usePlayerContext } from '../contexts/PlayerContext';
+import { formatTime } from '../helpers/dateHelper';
+import styles from './PlayerBar.module.css';
 import Shuffle from '../../assets/svg/shuffle-icon.svg';
 import Previous from '../../assets/svg/previous-icon.svg';
 import Pause from '../../assets/svg/pause-icon.svg';
@@ -6,10 +11,6 @@ import Play from '../../assets/svg/play-icon.svg';
 import Repeat from '../../assets/svg/repeat-icon.svg';
 import Next from '../../assets/svg/next-icon.svg';
 import Volume from '../../assets/svg/volume-icon.svg';
-import styles from './PlayerBar.module.css';
-import { usePlayerContext } from '../contexts/PlayerContext';
-import { useEffect, useState, useRef } from 'react';
-import { formatTime } from '../helpers/dateHelper';
 
 const PlayerBar: React.FC = () => {
   const {
@@ -19,9 +20,7 @@ const PlayerBar: React.FC = () => {
     audio,
     setCurrentAudio,
     activeEpisodeIndex,
-    previousEpisode,
     setPreviousEpisode,
-    nextEpisode,
     setNextEpisode,
     togglePlay,
     setActiveEpisodeIndex,
@@ -33,29 +32,6 @@ const PlayerBar: React.FC = () => {
   const [isShuffleActivated, setIsShuffleActivated] = useState(false);
   const [volume, setVolume] = useState(20);
   const isDragging = useRef(false);
-
-  useEffect(() => {
-    if (audio) {
-      const updateDuration = () => {
-        setDuration(formatTime(audio.duration));
-      };
-
-      const handleTimeUpdate = () => {
-        if (!isDragging.current) {
-          setCurrentTime(formatTime(audio.currentTime));
-          setAudioProgress((audio.currentTime * 100) / audio.duration);
-        }
-      };
-
-      audio.addEventListener('loadedmetadata', updateDuration);
-      audio.addEventListener('timeupdate', handleTimeUpdate);
-
-      return () => {
-        audio.removeEventListener('timeupdate', handleTimeUpdate);
-        audio.removeEventListener('loadedmetadata', updateDuration);
-      };
-    }
-  }, [audio]);
 
   const handleSliderChange = (e: any) => {
     const percentage = parseFloat(e.target.value);
@@ -73,13 +49,6 @@ const PlayerBar: React.FC = () => {
     if (audio) {
       audio.volume = e.target.value / 100;
       setVolume(audio.volume * 100);
-    }
-  };
-
-  const applyRepeatChanges = () => {
-    if (isRepeatActivated && activePodcast) {
-      setPreviousEpisode(activePodcast.episodes[activeEpisodeIndex].episodeUrl);
-      setNextEpisode(activePodcast.episodes[activeEpisodeIndex].episodeUrl);
     }
   };
 
@@ -163,6 +132,29 @@ const PlayerBar: React.FC = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (audio) {
+      const updateDuration = () => {
+        setDuration(formatTime(audio.duration));
+      };
+
+      const handleTimeUpdate = () => {
+        if (!isDragging.current) {
+          setCurrentTime(formatTime(audio.currentTime));
+          setAudioProgress((audio.currentTime * 100) / audio.duration);
+        }
+      };
+
+      audio.addEventListener('loadedmetadata', updateDuration);
+      audio.addEventListener('timeupdate', handleTimeUpdate);
+
+      return () => {
+        audio.removeEventListener('timeupdate', handleTimeUpdate);
+        audio.removeEventListener('loadedmetadata', updateDuration);
+      };
+    }
+  }, [audio]);
 
   return (
     <div className={styles.PlayerBar}>

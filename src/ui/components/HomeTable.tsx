@@ -1,11 +1,12 @@
 import React from 'react';
-import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
-import { Avatar, Button, Typography } from '@material-tailwind/react';
-import { formatDate } from '../helpers/dateHelper';
 import { NavLink } from 'react-router-dom';
+import { Avatar, Button, Typography } from '@material-tailwind/react';
+
+import { usePlayerContext } from '../contexts/PlayerContext';
+import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
+import { formatDate } from '../helpers/dateHelper';
 import Play from '../../assets/svg/play-icon-sm.svg';
 import Pause from '../../assets/svg/pause-icon-sm.svg';
-import { usePlayerContext } from '../contexts/PlayerContext';
 
 interface HomeTableProps {
   podcasts: IPodcast[];

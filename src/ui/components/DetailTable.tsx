@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
+import React from 'react';
 import { Avatar, Button, Typography } from '@material-tailwind/react';
+
+import { usePlayerContext } from '../contexts/PlayerContext';
+import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
+import { IEpisode } from '../../domain/models/interfaces/iEpisode.types';
 import { formatDate, millisToMinutesAndSeconds } from '../helpers/dateHelper';
 import Play from '../../assets/svg/play-icon-sm.svg';
-import Pause from '../../assets/svg/pause-icon-sm.svg';
 import Clock from '../../assets/svg/clock-icon.svg';
-import { usePlayerContext } from '../contexts/PlayerContext';
-import { IEpisode } from '../../domain/models/interfaces/iEpisode.types';
 
 interface DetailTableProps {
   podcast: IPodcast;
@@ -17,9 +17,7 @@ export const DetailTable: React.FC<DetailTableProps> = ({
   podcast,
   filteredEpisodes,
 }) => {
-  const { isPlaying, togglePlay, selectEpisode } = usePlayerContext();
-
-  const [selectedEpisode, setSelectedEpisode] = useState<string>();
+  const { selectEpisode } = usePlayerContext();
 
   return (
     <table className="Table" data-cy={`detail-${podcast.id}`}>
@@ -48,7 +46,6 @@ export const DetailTable: React.FC<DetailTableProps> = ({
                   data-cy={`play-detail-${episode.id}`}
                   onClick={() => {
                     selectEpisode(podcast, episode.episodeUrl);
-                    setSelectedEpisode(episode.id);
                   }}
                 >
                   <Play />

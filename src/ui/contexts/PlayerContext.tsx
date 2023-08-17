@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
+
 import { PlayerContextType } from '../../domain/models/interfaces/iPlayerContext.types';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 import { getPodcastDetail } from '../../infrastructure/services/ITunesPodcastService';
@@ -114,7 +115,6 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log('useEffect');
     if (isPlaying) {
       if (audioRef.current) {
         audioRef.current.play();

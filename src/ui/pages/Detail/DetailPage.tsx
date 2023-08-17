@@ -1,18 +1,14 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import '../../../assets/styles/index.css';
+
 import { usePlayerContext } from '../../contexts/PlayerContext';
-import { getPodcastDetail } from '../../../infrastructure/services/ITunesPodcastService';
 import { IPodcast } from '../../../domain/models/interfaces/iPodcast.types';
-import { Avatar, Button, Typography } from '@material-tailwind/react';
-import {
-  formatDate,
-  millisToMinutesAndSeconds,
-} from '../../helpers/dateHelper';
-import { SubSearchBar } from '../../components/SubSearchBar';
 import { IEpisode } from '../../../domain/models/interfaces/iEpisode.types';
+import { getPodcastDetail } from '../../../infrastructure/services/ITunesPodcastService';
+import { SubSearchBar } from '../../components/SubSearchBar';
 import { DetailTable } from '../../components/DetailTable';
 import styles from './DetailPage.module.css';
+import '../../../assets/styles/index.css';
 
 function Detail(): JSX.Element {
   const { id } = useParams();
@@ -28,17 +24,15 @@ function Detail(): JSX.Element {
   >([]);
 
   useEffect(() => {
-    console.log('filtrando');
     if (!isActiveSearch) setFilterValue('');
     if (detailedPodcast?.episodes != null) {
-      console.log('filtrando 2');
-
       let filteredResults = detailedPodcast?.episodes.filter(
         (episode) =>
           episode.title.toLowerCase().includes(filterValue.toLowerCase()) ||
           episode.topic.toLowerCase().includes(filterValue.toLowerCase()),
       );
       let sortedData = [...filteredResults];
+
       switch (orderBy) {
         case 'title':
           sortedData.sort((a, b) => a.title.localeCompare(b.title));

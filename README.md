@@ -101,4 +101,6 @@ Aunque el proyecto ha alcanzado un nivel funcional y estético satisfactorio, si
 
 - **Refactorización**: Aunque se ha tenido especial cuidado en mantener un código ordenado y escalable, siempre hay espacio para mejorar. Se podría considerar un refactor de algunos componentes para optimizar aún más la estructura del código y mejorar la mantenibilidad a largo plazo.
 
+- **Gestión de Errores**: Implementar una mejor gestión de errores y páginas específicas para mostrar errores al usuario.
+
 - **Implementación de sistema de caché**: Me hubiera gustado implementar un sistema de caché para almacenar información de las búsquedas y optimizar el rendimiento. Reduciría así la necesidad de hacer peticiones repetidas al servidor o API, lo que a su vez podría mejorar el rendimiento y la experiencia del usuario.

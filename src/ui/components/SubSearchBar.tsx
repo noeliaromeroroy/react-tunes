@@ -1,13 +1,13 @@
 import React from 'react';
 import { Input, Select, Option, Button } from '@material-tailwind/react';
-import SearchIcon from '../../assets/svg/search-icon.svg';
-import { usePlayerContext } from '../contexts/PlayerContext';
 
+import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
+import { usePlayerContext } from '../contexts/PlayerContext';
 import styles from './SubSearchBar.module.css';
+import SearchIcon from '../../assets/svg/search-icon.svg';
 import Verified from '../../assets/svg/verified.svg';
 import Play from '../../assets/svg/play-icon.svg';
 import Pause from '../../assets/svg/pause-icon.svg';
-import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 
 interface SubSearchBarProps {
   orderBy: string;
@@ -32,7 +32,8 @@ export const SubSearchBar: React.FC<SubSearchBarProps> = ({
     setIsActiveSearch((prevState: any) => !prevState);
   };
 
-  const { isPlaying, togglePlay } = usePlayerContext();
+  const { isPlaying, togglePlay, activePodcast, selectPodcast } =
+    usePlayerContext();
 
   return (
     <div id="SubSearchBar" className={styles.SubSearchBar}>
@@ -41,12 +42,21 @@ export const SubSearchBar: React.FC<SubSearchBarProps> = ({
       >
         {podcast && (
           <div className={`${styles.podcastTitle} pt-2`}>
-            <Button
-              className={styles.buttonHead}
-              onClick={() => togglePlay(podcast)}
-            >
-              {isPlaying ? <Pause /> : <Play />}
-            </Button>
+            {isPlaying && activePodcast?.id === podcast.id ? (
+              <Button
+                className={styles.buttonHead}
+                onClick={() => togglePlay()}
+              >
+                <Pause />
+              </Button>
+            ) : (
+              <Button
+                className={styles.buttonHead}
+                onClick={() => selectPodcast(podcast.id)}
+              >
+                <Play />
+              </Button>
+            )}
             <h1>{podcast.title}</h1>
             <div className="w-[20px] h-[20px]">
               <Verified />

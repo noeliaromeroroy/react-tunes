@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import '../../../assets/styles/index.css';
 import { usePlayerContext } from '../../contexts/PlayerContext';
 import { SubSearchBar } from '../../components/SubSearchBar';
 import { HomeTable } from '../../components/HomeTable';
+import '../../../assets/styles/index.css';
 
 function Search(): JSX.Element {
   const { results, setIsHome, filteredResults, setFilteredResults } =

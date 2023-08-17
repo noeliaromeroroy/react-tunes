@@ -1,16 +1,9 @@
-import React from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  NavLink,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Search from './Home/HomePage';
 import Detail from './Detail/DetailPage';
 import PlayerBar from '../components/PlayerBar';
 import { MainSearchBar } from '../components/MainSearchBar';
 import { PlayerProvider } from '../contexts/PlayerContext';
-
 function App(): JSX.Element {
   return (
     <PlayerProvider>
@@ -29,5 +22,4 @@ function App(): JSX.Element {
     </PlayerProvider>
   );
 }
-
 export default App;

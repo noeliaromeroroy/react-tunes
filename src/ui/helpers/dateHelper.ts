@@ -4,10 +4,11 @@ export const formatDate = (inputDate: Date) => {
     const now = moment();
     const date = moment(inputDate);
 
-    // Si es hoy pero no es tan reciente
+    // Today
     if (date.isSame(now, 'day')) {
         const hoursAgo = now.diff(date, 'hours');
 
+        // Hours ago
         if (hoursAgo === 1) {
             return 'an hour ago';
         } else {
@@ -15,22 +16,22 @@ export const formatDate = (inputDate: Date) => {
         }
     }
 
-    // Si fue ayer
+    // Yesterday
     if (date.isSame(now.clone().subtract(1, 'days'), 'day')) {
         return 'yesterday';
     }
 
-    // Si es hace menos de una semana pero no es hoy
+    // Less than one week, but not today nor yesterday
     if (date.isAfter(now.subtract(7, 'days')) && !date.isSame(now, 'day')) {
         return `last ${date.format('dddd').toLowerCase()}`;
     }
 
-    // Si es el mismo año
+    // Same year
     if (date.isSame(now, 'year')) {
         return date.format('DD/MMM');
     }
 
-    // Otros
+    // Default
     return date.format('DD/MM/YYYY');
 };
 
@@ -50,4 +51,4 @@ export const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-}
+};
