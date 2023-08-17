@@ -21,16 +21,17 @@ export const HomeTable: React.FC<HomeTableProps> = ({ podcasts }) => {
         <tr>
           <th key="play">#</th>
           <th key="title">Name</th>
-          <th key="description">Description</th>
-          <th key="released">Released</th>
+          <th key="description" className="hidden md:table-cell">
+            Description
+          </th>
+          <th key="released" className="hidden sm:table-cell">
+            Released
+          </th>
         </tr>
       </thead>
-      <tbody className="max-h-[400px] overflow-scroll">
+      <tbody>
         {podcasts.map(
-          (
-            { id, coverImageUrl, title, author, description, releaseDate },
-            index,
-          ) => {
+          ({ id, coverImageUrl, title, author, description, releaseDate }) => {
             return (
               <tr key={id}>
                 <td>
@@ -62,8 +63,10 @@ export const HomeTable: React.FC<HomeTableProps> = ({ podcasts }) => {
                     </Typography>
                   </div>
                 </td>
-                <td>{description}</td>
-                <td>{formatDate(new Date(releaseDate))}</td>
+                <td className="hidden md:table-cell">{description}</td>
+                <td className="hidden sm:table-cell">
+                  {formatDate(new Date(releaseDate))}
+                </td>
               </tr>
             );
           },

@@ -21,9 +21,15 @@ export const DetailTable: React.FC<DetailTableProps> = ({ podcast }) => {
         <tr>
           <th key="play">#</th>
           <th key="title">Title</th>
-          <th key="description">Topic</th>
-          <th key="released">Released</th>
-          <th key="duration">Reloj</th>
+          <th key="description" className="hidden md:table-cell">
+            Topic
+          </th>
+          <th key="released" className="hidden sm:table-cell">
+            Released
+          </th>
+          <th key="duration" className="hidden sm:table-cell">
+            Reloj
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -63,12 +69,16 @@ export const DetailTable: React.FC<DetailTableProps> = ({ podcast }) => {
                   {podcast.author}
                 </div>
               </td>
-              <td>
+              <td className="hidden md:table-cell">
                 {episode.topic.slice(0, 35)}{' '}
                 {episode.title.length > 35 && '...'}
               </td>
-              <td>{formatDate(episode.releaseDate)}</td>
-              <td>{millisToMinutesAndSeconds(episode.duration)}</td>
+              <td className="hidden sm:table-cell">
+                {formatDate(episode.releaseDate)}
+              </td>
+              <td className="hidden sm:table-cell">
+                {millisToMinutesAndSeconds(episode.duration)}
+              </td>
             </tr>
           );
         })}

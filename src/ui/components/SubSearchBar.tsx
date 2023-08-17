@@ -51,27 +51,28 @@ export const SubSearchBar: React.FC<SubSearchBarProps> = ({
             <Verified />
           </div>
         )}
+        <div className="hidden sm:flex sm:flex-row">
+          {isActiveSearch && (
+            <Input
+              type="static"
+              placeholder="search in results"
+              onChange={(e) => setFilterValue(e.target.value)}
+              labelProps={{
+                className: 'labelInput',
+              }}
+              name="filterTable"
+              crossOrigin=""
+              className="input placeholderGray absolute"
+            />
+          )}
 
-        {isActiveSearch && (
-          <Input
-            type="static"
-            placeholder="search in results"
-            onChange={(e) => setFilterValue(e.target.value)}
-            labelProps={{
-              className: 'labelInput',
+          <div
+            onClick={() => {
+              toggleActiveSearch();
             }}
-            name="filterTable"
-            crossOrigin=""
-            className="input placeholderGray absolute"
-          />
-        )}
-
-        <div
-          onClick={() => {
-            toggleActiveSearch();
-          }}
-        >
-          <SearchIcon />
+          >
+            <SearchIcon />
+          </div>
         </div>
       </div>
       <div className={styles.orderContainer}>

@@ -110,6 +110,23 @@ const PlayerBar: React.FC = () => {
 
   const toggleShuffle = () => {
     setIsShuffleActivated((prevValue) => !prevValue);
+    if (isShuffleActivated && activePodcast) {
+      setNextEpisode(
+        activePodcast.episodes[getRandomEpisodeIndex()].episodeUrl,
+      );
+    }
+  };
+
+  const getRandomEpisodeIndex = (): number => {
+    let randomIndex = 0;
+    if (activePodcast) {
+      do {
+        randomIndex = Math.floor(Math.random() * activePodcast.episodes.length);
+      } while (randomIndex === activeEpisodeIndex);
+    } else {
+      randomIndex = 0;
+    }
+    return randomIndex;
   };
 
   const playPreviousEpisode = () => {
@@ -118,10 +135,16 @@ const PlayerBar: React.FC = () => {
       if (isRepeatActivated) {
         setCurrentAudio(activePodcast.episodes[index].episodeUrl);
       } else {
+        if (isShuffleActivated) {
+          const randomIndex = getRandomEpisodeIndex();
+          setCurrentAudio(activePodcast.episodes[randomIndex].episodeUrl);
+          setActiveEpisodeIndex(randomIndex);
+        } else {
+          setCurrentAudio(activePodcast.episodes[index + 1].episodeUrl);
+          setActiveEpisodeIndex(index + 1);
+        }
         setNextEpisode(activePodcast.episodes[index].episodeUrl);
         setPreviousEpisode(activePodcast.episodes[index + 2].episodeUrl);
-        setCurrentAudio(activePodcast.episodes[index + 1].episodeUrl);
-        setActiveEpisodeIndex(index + 1);
       }
     }
   };
@@ -135,11 +158,17 @@ const PlayerBar: React.FC = () => {
         if (index - 2 < 0) {
           setNextEpisode(null);
         } else {
-          setNextEpisode(activePodcast.episodes[index - 2].episodeUrl);
+          if (isShuffleActivated) {
+            const randomIndex = getRandomEpisodeIndex();
+            setCurrentAudio(activePodcast.episodes[randomIndex].episodeUrl);
+            setActiveEpisodeIndex(randomIndex);
+          } else {
+            setCurrentAudio(activePodcast.episodes[index - 1].episodeUrl);
+            setActiveEpisodeIndex(index - 1);
+          }
         }
+        setNextEpisode(activePodcast.episodes[index - 2].episodeUrl);
         setPreviousEpisode(activePodcast.episodes[index].episodeUrl);
-        setCurrentAudio(activePodcast.episodes[index - 1].episodeUrl);
-        setActiveEpisodeIndex(index - 1);
       }
     }
   };
@@ -157,7 +186,6 @@ const PlayerBar: React.FC = () => {
             <div className="flex flex-col justify-center">
               <div className={styles.podcastTitl}>{activePodcast.title}</div>
               <div className={styles.podcastAuthor}>{activePodcast.author}</div>
-
               {/*  */}
               <div className={styles.podcastAuthor}>
                 {activePodcast.episodes[activeEpisodeIndex].title}
@@ -182,7 +210,7 @@ const PlayerBar: React.FC = () => {
           <Previous />
         </Button>
         <Button onClick={() => togglePlay()}>
-          {isPlaying ? <Pause /> : <Play />}
+          {isPlaying && activePodcast ? <Pause /> : <Play />}
         </Button>
         <Button onClick={() => playNextEpisode()}>
           <Next />

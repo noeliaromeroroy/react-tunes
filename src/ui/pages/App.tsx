@@ -17,7 +17,7 @@ function App(): JSX.Element {
       <Router>
         <PlayerBar />
         <div className="containerApp">
-          <section className="max-w-custom flex-grow">
+          <section className="md:max-w-custom px-2 md:px-0 mx-w-full flex-grow">
             <MainSearchBar />
             <Routes>
               <Route path="/detail/:id" element={<Detail />} />
