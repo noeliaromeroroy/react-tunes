@@ -15,23 +15,27 @@
 .orderContainer div:first-child {
   @apply min-w-[91px];
 }
-
 .selectOrder {
   @apply text-white bg-transparent border-none border-transparent min-w-[91px] w-[91px];
 }
-
 .orderContainer ul {
   @apply p-1 bg-black/80 border-0 text-white/80;
 }
 .label-select::after {
   @apply !content-none;
 }
+
 .podcastTitle {
   @apply flex flex-row justify-between gap-4 items-center flex-grow;
 }
+
 .buttonHead {
-  @apply bg-active rounded-full !p-2 md:!p-6 flex items-center flex-row overflow-visible;
+  @apply shadow-none bg-none bg-transparent rounded-full w-[75px] text-center !p-0 h-[60px] bg-active flex-grow-0;
 }
+.buttonHead svg {
+  @apply inline-block;
+}
+
 .podcastTitle h1 {
   @apply text-xl md:text-3xl font-bold tracking-[-0.64] text-white self-start;
 }

@@ -48,7 +48,9 @@ export const SubSearchBar: React.FC<SubSearchBarProps> = ({
               {isPlaying ? <Pause /> : <Play />}
             </Button>
             <h1>{podcast.title}</h1>
-            <Verified />
+            <div className="w-[20px] h-[20px]">
+              <Verified />
+            </div>
           </div>
         )}
         <div className="hidden sm:flex sm:flex-row">

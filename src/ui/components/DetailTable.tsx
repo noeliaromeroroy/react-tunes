@@ -4,6 +4,7 @@ import { Avatar, Button, Typography } from '@material-tailwind/react';
 import { formatDate, millisToMinutesAndSeconds } from '../helpers/dateHelper';
 import Play from '../../assets/svg/play-icon-sm.svg';
 import Pause from '../../assets/svg/pause-icon-sm.svg';
+import Clock from '../../assets/svg/clock-icon.svg';
 import { usePlayerContext } from '../contexts/PlayerContext';
 import { IEpisode } from '../../domain/models/interfaces/iEpisode.types';
 
@@ -33,7 +34,7 @@ export const DetailTable: React.FC<DetailTableProps> = ({
             Released
           </th>
           <th key="duration" className="hidden sm:table-cell">
-            Reloj
+            <Clock />
           </th>
         </tr>
       </thead>
@@ -42,26 +43,15 @@ export const DetailTable: React.FC<DetailTableProps> = ({
           return (
             <tr key={episode.id}>
               <td>
-                {selectedEpisode !== episode.id ? (
-                  <Button
-                    className="bg-transparent p-3 rounded-full"
-                    onClick={() => {
-                      selectEpisode(podcast, episode.episodeUrl);
-                      setSelectedEpisode(episode.id);
-                    }}
-                  >
-                    <Play />
-                  </Button>
-                ) : (
-                  <Button
-                    className={`${
-                      isPlaying ? 'bg-active' : 'bg-transparent'
-                    } p-3 rounded-full`}
-                    onClick={() => togglePlay()}
-                  >
-                    {isPlaying ? <Pause /> : <Play />}
-                  </Button>
-                )}
+                <Button
+                  className="bg-transparent p-3 rounded-full"
+                  onClick={() => {
+                    selectEpisode(podcast, episode.episodeUrl);
+                    setSelectedEpisode(episode.id);
+                  }}
+                >
+                  <Play />
+                </Button>
               </td>
               <td className="info">
                 <Avatar size="md" variant="rounded" src={episode.cover} />

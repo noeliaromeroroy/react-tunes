@@ -57,27 +57,6 @@ const PlayerBar: React.FC = () => {
     }
   }, [audio]);
 
-  /*  useEffect(() => {
-    if (activePodcast) {
-      activeEpisodeIndex !== activePodcast?.episodes.length - 1
-        ? setPreviousEpisode(null)
-        : setPreviousEpisode(
-            activePodcast.episodes[activeEpisodeIndex + 1].episodeUrl,
-          );
-
-      activeEpisodeIndex === 0
-        ? setNextEpisode(
-            activePodcast.episodes[activeEpisodeIndex - 1].episodeUrl,
-          )
-        : setNextEpisode(null);
-
-      //Repeat
-      if (isRepeatActivated) {
-        applyRepeatChanges;
-      }
-    }
-  }, [activeEpisodeIndex]); */
-
   const handleSliderChange = (e: any) => {
     const percentage = parseFloat(e.target.value);
     if (audio) {
@@ -204,44 +183,53 @@ const PlayerBar: React.FC = () => {
       </div>
 
       <div
-        className={`${styles.controls} ${!activePodcast ? 'opacity-40' : ''}`}
+        className={`${styles.controlsBar} ${
+          !activePodcast ? 'opacity-40' : ''
+        }`}
       >
-        <Button
-          className={`${isShuffleActivated ? 'bg-indigo-400' : ''}`}
-          onClick={() => toggleShuffle()}
-        >
-          <Shuffle />
-        </Button>
+        <div className={styles.controls}>
+          <Button
+            disabled={!activePodcast}
+            className={`${isShuffleActivated ? '!bg-active/50' : ''}`}
+            onClick={() => toggleShuffle()}
+          >
+            <Shuffle />
+          </Button>
 
-        <Button
-          onClick={() => playPreviousEpisode()}
-          disabled={
-            !activePodcast ||
-            activeEpisodeIndex === activePodcast.episodes.length - 1
-          }
-        >
-          <Previous />
-        </Button>
-        <Button onClick={() => togglePlay()} disabled={!activePodcast}>
-          {isPlaying && activePodcast ? <Pause /> : <Play />}
-        </Button>
-        <Button
-          onClick={() => playNextEpisode()}
-          disabled={
-            !activePodcast || (activeEpisodeIndex === 0 && !isShuffleActivated)
-          }
-        >
-          <Next />
-        </Button>
+          <Button
+            onClick={() => playPreviousEpisode()}
+            disabled={
+              !activePodcast ||
+              activeEpisodeIndex === activePodcast.episodes.length - 1
+            }
+          >
+            <Previous />
+          </Button>
+          <Button
+            className="!bg-active"
+            onClick={() => togglePlay()}
+            disabled={!activePodcast}
+          >
+            {isPlaying && activePodcast ? <Pause /> : <Play />}
+          </Button>
+          <Button
+            onClick={() => playNextEpisode()}
+            disabled={
+              !activePodcast ||
+              (activeEpisodeIndex === 0 && !isShuffleActivated)
+            }
+          >
+            <Next />
+          </Button>
 
-        <Button
-          className={`${isRepeatActivated ? 'bg-indigo-400' : ''}`}
-          onClick={() => toggleRepeat()}
-          disabled={!activePodcast}
-        >
-          <Repeat />
-        </Button>
-
+          <Button
+            className={`${isRepeatActivated ? '!bg-active/50' : ''}`}
+            onClick={() => toggleRepeat()}
+            disabled={!activePodcast}
+          >
+            <Repeat />
+          </Button>
+        </div>
         <div className={styles.progress}>
           <span>{currentTime}</span>
           <Slider
@@ -249,7 +237,7 @@ const PlayerBar: React.FC = () => {
             max={!activePodcast ? 0 : duration}
             value={!activePodcast ? 0 : audioProgress}
             onChange={handleSliderChange}
-            className={`${styles.progressBar} w-[400px]`}
+            className={`${styles.progressBar} w-full`}
           />
           <span className={styles.time}>{duration}</span>
         </div>
@@ -260,7 +248,7 @@ const PlayerBar: React.FC = () => {
           value={volume}
           size="sm"
           onChange={handleVolumeChange}
-          className={`${styles.progressBar} w-[100px]`}
+          className={`${styles.progressBar} w-full max-w-full`}
         />
       </div>
     </div>

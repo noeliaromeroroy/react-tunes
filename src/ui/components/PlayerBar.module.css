@@ -1,8 +1,9 @@
 .PlayerBar {
-  @apply fixed bottom-0 flex w-full flex-row items-center justify-between bg-black z-10;
+  @apply fixed bottom-0 flex w-full flex-col lg:flex-row lg:gap-2 gap-3 items-center justify-between bg-black z-10;
 }
+
 .podcastDetail {
-  @apply flex h-[110px] flex-row justify-center gap-6 min-w-[300px];
+  @apply flex h-[110px] flex-row justify-center gap-6 lg:w-[400px];
 }
 
 .podcastTitle {
@@ -13,8 +14,19 @@
   @apply text-base font-medium text-white text-opacity-30;
 }
 
+.controlsBar {
+  @apply flex h-full max-w-screen-lg  flex-col md:flex-row  items-center gap-8 grow;
+}
+
 .controls {
-  @apply flex h-full max-w-screen-lg grow flex-row  items-center gap-8;
+  @apply flex flex-row gap-6;
+}
+
+.controls button {
+  @apply shadow-none bg-none bg-transparent rounded-full  w-[50px] text-center p-0 h-[50px];
+}
+.controls button svg {
+  @apply inline-block;
 }
 
 .progress {
@@ -30,10 +42,10 @@
 .progressBar div {
   @apply bg-white;
 }
-.volume {
-  @apply inline-flex h-6 items-center justify-start gap-[11px] px-6;
-}
 
-.PlayerBar button {
-  @apply p-2 shadow-none bg-none bg-transparent;
+.volume {
+  @apply inline-flex h-6 items-center justify-start gap-[11px] px-6  w-[160px];
+}
+.volume div {
+  @apply min-w-0;
 }

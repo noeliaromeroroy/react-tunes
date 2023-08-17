@@ -39,6 +39,7 @@ export const HomeTable: React.FC<HomeTableProps> = ({ podcasts }) => {
                     <Button
                       className="bg-transparent p-0 y-0"
                       onClick={() => selectPodcast(id)}
+                      id={`play-${id}`}
                     >
                       <Play />
                     </Button>
