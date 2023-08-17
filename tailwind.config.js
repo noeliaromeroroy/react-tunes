@@ -9,6 +9,7 @@ module.exports = withMT({
       },
       colors: {
         body: '#181818',
+        active: '#5c67de',
         'home-color-start': '#1B1B1B',
         'home-color-end': '#14151F',
       },

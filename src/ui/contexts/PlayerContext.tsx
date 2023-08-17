@@ -21,7 +21,7 @@ const PlayerContext = createContext<PlayerContextType>({
   setActivePodcast: (value: React.SetStateAction<IPodcast | null>) => null,
   isPlaying: false,
   setIsPlaying: (value: React.SetStateAction<boolean>) => false,
-  togglePlay: () => {},
+  togglePlay: (podcast?: IPodcast) => {},
   selectPodcast: (id: string) => Promise.resolve(),
   selectEpisode: (podcast: IPodcast, episodeUrl: string) => Promise.resolve(),
   audio: null,
@@ -44,7 +44,9 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const togglePlay = () => {
+  const togglePlay = (podcast?: IPodcast) => {
+    console.log(podcast?.title);
+    if (!activePodcast) if (podcast) selectPodcast(podcast.id);
     setIsPlaying((prevIsPlaying) => !prevIsPlaying);
   };
 

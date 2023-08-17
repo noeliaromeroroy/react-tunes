@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchIcon from '../../assets/svg/search-icon.svg';
+import Back from '../../assets/svg/back-icon.svg';
 import { Input } from '@material-tailwind/react';
 import { searchPodcasts } from '../../infrastructure/services/ITunesPodcastService';
 import { usePlayerContext } from '../contexts/PlayerContext';
@@ -24,7 +24,11 @@ export const MainSearchBar: React.FC = () => {
 
   return (
     <div className={styles.MainSearchBar}>
-      {!isHome && <NavLink to="/">Volver</NavLink>}
+      {!isHome && (
+        <NavLink to="/">
+          <Back />
+        </NavLink>
+      )}
       <Input
         className={`${styles.input} placeholder-gray`}
         id="search-podcast"

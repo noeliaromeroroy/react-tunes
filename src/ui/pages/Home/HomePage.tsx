@@ -57,7 +57,7 @@ function Search(): JSX.Element {
         options={[
           { value: 'title', label: 'Title' },
           { value: 'author', label: 'Author' },
-          { value: 'date', label: 'Released Date' },
+          { value: 'date', label: 'Date' },
         ]}
       />
       {filteredResults.length > 0 ? (

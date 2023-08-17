@@ -9,9 +9,23 @@
 .containerSearch {
   @apply flex flex-row gap-5 items-center;
 }
+
+.orderContainer div:first-child {
+  @apply min-w-[91px];
+}
 .selectOrder {
-  @apply text-white bg-transparent border-none border-transparent;
+  @apply text-white bg-transparent border-none border-transparent min-w-[91px] w-[91px];
+}
+
+.orderContainer ul {
+  @apply p-1 bg-black/80 border-0 text-white/80;
 }
 .label-select::after {
   @apply !content-none;
+}
+.podcastTitle {
+  @apply flex flex-row justify-between;
+}
+.podcastTitle h1 {
+  @apply text-3xl font-bold tracking-[-0.64] text-white self-start;
 }

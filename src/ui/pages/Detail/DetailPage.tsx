@@ -4,8 +4,7 @@ import '../../../assets/styles/index.css';
 import { usePlayerContext } from '../../contexts/PlayerContext';
 import { getPodcastDetail } from '../../../infrastructure/services/ITunesPodcastService';
 import { IPodcast } from '../../../domain/models/interfaces/iPodcast.types';
-import { Avatar, Typography } from '@material-tailwind/react';
-import Play from '../../../assets/svg/play-icon.svg';
+import { Avatar, Button, Typography } from '@material-tailwind/react';
 import {
   formatDate,
   millisToMinutesAndSeconds,
@@ -13,6 +12,7 @@ import {
 import { SubSearchBar } from '../../components/SubSearchBar';
 import { IEpisode } from '../../../domain/models/interfaces/iEpisode.types';
 import { DetailTable } from '../../components/DetailTable';
+import styles from './DetailPage.module.css';
 
 function Detail(): JSX.Element {
   const { id } = useParams();
@@ -74,31 +74,35 @@ function Detail(): JSX.Element {
   }, []);
 
   return (
-    <div>
+    <>
       {detailedPodcast && (
-        <>
-          <h1>{detailedPodcast.title}</h1>
-          <img src={detailedPodcast.coverImageUrl} />
-          <p>------------</p>
+        <div className={styles.DetailedPage} id="DetailedPage">
+          <img
+            className="h-[280px] w-full object-cover object-center rounded-lg"
+            src={detailedPodcast.coverImageUrl}
+            alt={detailedPodcast.title}
+          />
+          ñe
           <div id="results">
             <SubSearchBar
               orderBy={orderBy}
               setOrderBy={setOrderBy}
               setFilterValue={setFilterValue}
               isActiveSearch={isActiveSearch}
+              podcast={detailedPodcast}
               setIsActiveSearch={setIsActiveSearch}
               options={[
                 { value: 'title', label: 'Title' },
-                { value: 'date', label: 'Released Date' },
+                { value: 'date', label: 'Date' },
                 { value: 'duration', label: 'Duration' },
               ]}
             />
 
             <DetailTable podcast={detailedPodcast} />
           </div>
-        </>
+        </div>
       )}
-    </div>
+    </>
   );
 }
 
