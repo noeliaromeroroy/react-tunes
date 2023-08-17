@@ -159,7 +159,7 @@ const PlayerBar: React.FC = () => {
 
   const playNextEpisode = () => {
     const index = activeEpisodeIndex;
-    if (activePodcast && audio && index - 1 >= 0) {
+    if (activePodcast && audio && (index - 1 >= 0 || isShuffleActivated)) {
       if (isRepeatActivated) {
         setCurrentAudio(activePodcast.episodes[index].episodeUrl);
       } else {
@@ -192,13 +192,12 @@ const PlayerBar: React.FC = () => {
               src={activePodcast.coverImageUrl}
             />
             <div className="flex flex-col justify-center">
-              <div className={styles.podcastTitl}>{activePodcast.title}</div>
-              <div className={styles.podcastAuthor}>{activePodcast.author}</div>
-              {/*  */}
-              <div className={styles.podcastAuthor}>
-                {activePodcast.episodes[activeEpisodeIndex].title}
+              <div className={styles.podcastTitle}>
+                {activePodcast.episodes[activeEpisodeIndex].title.slice(0, 35)}{' '}
+                {activePodcast.episodes[activeEpisodeIndex].title.length > 35 &&
+                  '...'}
               </div>
-              {/*  */}
+              <div className={styles.podcastAuthor}>{activePodcast.author}</div>
             </div>
           </>
         )}
@@ -214,19 +213,31 @@ const PlayerBar: React.FC = () => {
           <Shuffle />
         </Button>
 
-        <Button onClick={() => playPreviousEpisode()}>
+        <Button
+          onClick={() => playPreviousEpisode()}
+          disabled={
+            !activePodcast ||
+            activeEpisodeIndex === activePodcast.episodes.length - 1
+          }
+        >
           <Previous />
         </Button>
-        <Button onClick={() => togglePlay()}>
+        <Button onClick={() => togglePlay()} disabled={!activePodcast}>
           {isPlaying && activePodcast ? <Pause /> : <Play />}
         </Button>
-        <Button onClick={() => playNextEpisode()}>
+        <Button
+          onClick={() => playNextEpisode()}
+          disabled={
+            !activePodcast || (activeEpisodeIndex === 0 && !isShuffleActivated)
+          }
+        >
           <Next />
         </Button>
 
         <Button
           className={`${isRepeatActivated ? 'bg-indigo-400' : ''}`}
           onClick={() => toggleRepeat()}
+          disabled={!activePodcast}
         >
           <Repeat />
         </Button>
@@ -235,8 +246,8 @@ const PlayerBar: React.FC = () => {
           <span>{currentTime}</span>
           <Slider
             min="0"
-            max={duration}
-            value={audioProgress}
+            max={!activePodcast ? 0 : duration}
+            value={!activePodcast ? 0 : audioProgress}
             onChange={handleSliderChange}
             className={`${styles.progressBar} w-[400px]`}
           />

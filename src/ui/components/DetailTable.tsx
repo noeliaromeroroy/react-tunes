@@ -5,12 +5,17 @@ import { formatDate, millisToMinutesAndSeconds } from '../helpers/dateHelper';
 import Play from '../../assets/svg/play-icon-sm.svg';
 import Pause from '../../assets/svg/pause-icon-sm.svg';
 import { usePlayerContext } from '../contexts/PlayerContext';
+import { IEpisode } from '../../domain/models/interfaces/iEpisode.types';
 
 interface DetailTableProps {
   podcast: IPodcast;
+  filteredEpisodes: IEpisode[] | undefined;
 }
 
-export const DetailTable: React.FC<DetailTableProps> = ({ podcast }) => {
+export const DetailTable: React.FC<DetailTableProps> = ({
+  podcast,
+  filteredEpisodes,
+}) => {
   const { isPlaying, togglePlay, selectEpisode } = usePlayerContext();
 
   const [selectedEpisode, setSelectedEpisode] = useState<string>();
@@ -33,7 +38,7 @@ export const DetailTable: React.FC<DetailTableProps> = ({ podcast }) => {
         </tr>
       </thead>
       <tbody>
-        {podcast.episodes?.map((episode) => {
+        {filteredEpisodes?.map((episode) => {
           return (
             <tr key={episode.id}>
               <td>

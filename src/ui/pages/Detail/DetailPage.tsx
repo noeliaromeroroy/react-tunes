@@ -28,9 +28,12 @@ function Detail(): JSX.Element {
   >([]);
 
   useEffect(() => {
+    console.log('filtrando');
     if (!isActiveSearch) setFilterValue('');
-    if (activePodcast?.episodes != null) {
-      let filteredResults = activePodcast?.episodes.filter(
+    if (detailedPodcast?.episodes != null) {
+      console.log('filtrando 2');
+
+      let filteredResults = detailedPodcast?.episodes.filter(
         (episode) =>
           episode.title.toLowerCase().includes(filterValue.toLowerCase()) ||
           episode.topic.toLowerCase().includes(filterValue.toLowerCase()),
@@ -97,7 +100,10 @@ function Detail(): JSX.Element {
             ]}
           />
 
-          <DetailTable podcast={detailedPodcast} />
+          <DetailTable
+            podcast={detailedPodcast}
+            filteredEpisodes={filteredDetailResults}
+          />
         </div>
       )}
     </>
