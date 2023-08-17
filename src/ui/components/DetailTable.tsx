@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 import { Avatar, Button, Typography } from '@material-tailwind/react';
 import { formatDate, millisToMinutesAndSeconds } from '../helpers/dateHelper';
-import Play from '../../assets/svg/play-icon.svg';
-import Pause from '../../assets/svg/pause-icon.svg';
+import Play from '../../assets/svg/play-icon-sm.svg';
+import Pause from '../../assets/svg/pause-icon-sm.svg';
 import { usePlayerContext } from '../contexts/PlayerContext';
 
 interface DetailTableProps {

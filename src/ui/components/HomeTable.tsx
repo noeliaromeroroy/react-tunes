@@ -3,8 +3,8 @@ import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 import { Avatar, Button, Typography } from '@material-tailwind/react';
 import { formatDate } from '../helpers/dateHelper';
 import { NavLink } from 'react-router-dom';
-import Play from '../../assets/svg/play-icon.svg';
-import Pause from '../../assets/svg/pause-icon.svg';
+import Play from '../../assets/svg/play-icon-sm.svg';
+import Pause from '../../assets/svg/pause-icon-sm.svg';
 import { usePlayerContext } from '../contexts/PlayerContext';
 
 interface HomeTableProps {
