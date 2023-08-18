@@ -64,7 +64,7 @@ function Search(): JSX.Element {
         <HomeTable podcasts={filteredResults} />
       ) : (
         <h1 className="text-white/40">
-          ¡Comienza a buscar tu podcast favorito con ReactTunes!
+          Start searching for your favorite podcast with ReactTunes!
         </h1>
       )}
     </div>
