@@ -2,6 +2,12 @@
 
 React Tunes es una aplicación web que permite a los usuarios buscar y reproducir podcasts utilizando la API de iTunes.
 
+![Image Demo React Tunes 01](https://react-tunes.s3.eu-west-3.amazonaws.com/demoimages/demo-react-tunes-01.png)
+![Image Demo React Tunes 02](https://react-tunes.s3.eu-west-3.amazonaws.com/demoimages/demo-react-tunes-02.png)
+
+## Demo
+
+Puedes ver una demo de la aplicación haciendo clic 👉🏻[**aquí**](http://react-tunes.s3-website.eu-west-3.amazonaws.com/).
 
 ## Features
 
@@ -104,3 +110,5 @@ Aunque el proyecto ha alcanzado un nivel funcional y estético satisfactorio, si
 - **Gestión de Errores**: Implementar una mejor gestión de errores y páginas específicas para mostrar errores al usuario.
 
 - **Implementación de sistema de caché**: Me hubiera gustado implementar un sistema de caché para almacenar información de las búsquedas y optimizar el rendimiento. Reduciría así la necesidad de hacer peticiones repetidas al servidor o API, lo que a su vez podría mejorar el rendimiento y la experiencia del usuario.
+
+- **Paginación**: También se puede mejorar el rendimiento incluyendo paginación en los resultados de búsqueda. No lo vi realmente necesario en la primera versión ya que el API de iTunes, como máximo, devuelve 200 resultados y no hay posibilidad de solicitar resultados al API a partir de la posición 200 de sus resultados si queremos mostrar más allá del límite que ofrece.
