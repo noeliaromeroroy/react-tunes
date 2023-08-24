@@ -2,6 +2,10 @@ import React, { createContext } from 'react';
 import { IPodcast } from './iPodcast.types';
 
 export interface PlayerContextType {
+    featuredPodcast: IPodcast[];
+    setFeaturedPodcast: React.Dispatch<React.SetStateAction<IPodcast[]>>;
+    country: string | null;
+    setCountry: (country: string | null) => void;
     results: IPodcast[];
     setResults: React.Dispatch<React.SetStateAction<IPodcast[]>>;
     filteredResults: IPodcast[];

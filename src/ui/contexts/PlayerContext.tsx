@@ -12,6 +12,10 @@ import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 import { getPodcastDetail } from '../../infrastructure/services/ITunesPodcastService';
 
 const PlayerContext = createContext<PlayerContextType>({
+  country: null,
+  setCountry: (value: React.SetStateAction<string | null>) => null,
+  featuredPodcast: [],
+  setFeaturedPodcast: (value: React.SetStateAction<IPodcast[]>) => {},
   results: [],
   setResults: (value: React.SetStateAction<IPodcast[]>) => {},
   filteredResults: [],
@@ -44,6 +48,7 @@ interface PlayerProviderProps {
 }
 
 export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
+  const [featuredPodcast, setFeaturedPodcast] = useState<IPodcast[]>([]);
   const [results, setResults] = useState<IPodcast[]>([]);
   const [filteredResults, setFilteredResults] = useState<IPodcast[]>([]);
   const [isHome, setIsHome] = useState<boolean>(true);
@@ -52,6 +57,7 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   const [previousEpisode, setPreviousEpisode] = useState<string | null>(null);
   const [nextEpisode, setNextEpisode] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [country, setCountry] = useState<string | null>('the world');
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -131,6 +137,10 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
       value={{
         results,
         setResults,
+        featuredPodcast,
+        setFeaturedPodcast,
+        country,
+        setCountry,
         isHome,
         setIsHome,
         filteredResults,

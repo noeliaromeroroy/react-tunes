@@ -1,0 +1,19 @@
+.CardPodcast {
+  @apply bg-white/10 text-white;
+}
+.CardPodcast img {
+  @apply h-[120px] w-full object-cover object-center rounded-lg;
+}
+.title {
+  @apply mb-2 text-lg;
+}
+
+.author {
+  @apply font-medium text-sm opacity-70;
+}
+.buttonContainer {
+  @apply flex flex-row justify-between gap-7 pt-2;
+}
+.action {
+  @apply rounded-full p-3;
+}

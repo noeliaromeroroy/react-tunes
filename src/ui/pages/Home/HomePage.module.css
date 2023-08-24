@@ -1,0 +1,12 @@
+.featuredPodcast {
+  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-8 pb-[160px];
+}
+h1 {
+  @apply text-white/90 text-3xl my-8;
+}
+.loader {
+  @apply w-full h-full flex flex-row justify-center p-24;
+}
+.spinner {
+  @apply h-12 w-12;
+}

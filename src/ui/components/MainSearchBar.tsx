@@ -9,7 +9,8 @@ import Back from '../../assets/svg/back-icon.svg';
 
 export const MainSearchBar: React.FC = () => {
   const navigate = useNavigate();
-  const { setResults, isHome, setFilteredResults } = usePlayerContext();
+  const { results, setResults, isHome, setFilteredResults } =
+    usePlayerContext();
 
   const handleKeyDown = async (
     event: React.KeyboardEvent<HTMLInputElement>,
@@ -27,12 +28,20 @@ export const MainSearchBar: React.FC = () => {
 
   return (
     <div className={styles.MainSearchBar}>
-      {!isHome && (
+      {!isHome ? (
         <div data-cy="back-to-home">
           <NavLink to="/">
             <Back />
           </NavLink>
         </div>
+      ) : (
+        results.length > 0 && (
+          <div data-cy="back-to-home">
+            <NavLink to="/" onClick={() => navigate(0)}>
+              <Back />
+            </NavLink>
+          </div>
+        )
       )}
       <Input
         className={`${styles.input} placeholder-gray`}

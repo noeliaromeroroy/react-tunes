@@ -3,8 +3,6 @@ import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 export const searchPodcasts = async (term: string): Promise<IPodcast[]> => {
   const url = new URL('https://itunes.apple.com/search');
   const params = {
-    country: 'ES',
-    lang: 'es_es',
     limit: 200,
     term,
     media: 'podcast',
@@ -82,6 +80,41 @@ export const getPodcastDetail = async (
     }));
 
     return podcastDetail;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const getFeaturedPodcast = async (
+  country_code?: string,
+): Promise<IPodcast[]> => {
+  const url = new URL('https://itunes.apple.com/search');
+  const params = {
+    ...(country_code ? { country: country_code } : {}),
+    limit: 21,
+    media: 'podcast',
+    term: 'podcast',
+  };
+
+  try {
+    url.search = new URLSearchParams(params as any).toString();
+    const response = await fetch(url.toString());
+    if (!response.ok) {
+      throw new Error(`iTunes Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return data.results.map((result: any) => ({
+      id: result.collectionId.toString(),
+      title: result.collectionName,
+      description: result.collectionCensoredName,
+      author: result.artistName,
+      releaseDate: result.releaseDate,
+      coverImageUrl: result.artworkUrl100,
+      feedUrl: result.feedUrl,
+      episodes: [],
+    }));
   } catch (error) {
     console.error(error);
     throw error;
