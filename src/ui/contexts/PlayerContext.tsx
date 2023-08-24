@@ -37,6 +37,8 @@ const PlayerContext = createContext<PlayerContextType>({
   setPreviousEpisode: (value: React.SetStateAction<string | null>) => true,
   nextEpisode: null,
   setNextEpisode: (value: React.SetStateAction<string | null>) => true,
+  isPlayLoading: false,
+  setIsPlayLoading: (value: React.SetStateAction<boolean>) => false,
 });
 
 export const usePlayerContext = (): PlayerContextType => {
@@ -57,16 +59,20 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   const [previousEpisode, setPreviousEpisode] = useState<string | null>(null);
   const [nextEpisode, setNextEpisode] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isPlayLoading, setIsPlayLoading] = useState<boolean>(false);
   const [country, setCountry] = useState<string | null>('the world');
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const tryPlay = () => {
+    setIsPlayLoading(true);
     if (audioRef.current) {
-      audioRef.current.play().catch((error) => {
-        console.warn('Play interrupted. Retrying in 500ms:', error);
-        setTimeout(tryPlay, 500);
-      });
+      audioRef.current
+        .play()
+        .catch(() => {
+          setTimeout(tryPlay, 500);
+        })
+        .finally(() => setIsPlayLoading(false));
     }
   };
 
@@ -79,28 +85,34 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   };
 
   const togglePlay = (podcast?: IPodcast) => {
-    if (!activePodcast) if (podcast) selectPodcast(podcast.id);
+    if (!activePodcast && podcast) selectPodcast(podcast.id);
     setIsPlaying((prevIsPlaying) => !prevIsPlaying);
   };
 
   const selectPodcast = async (id: string) => {
     setIsPlaying(false);
 
-    const podcast = await getPodcastDetail(id);
-    setActivePodcast(podcast);
-    setActiveEpisodeIndex(0);
-    setPreviousEpisode(null);
-    if (activePodcast?.episodes[1].episodeUrl) {
-      setNextEpisode(activePodcast.episodes[1].episodeUrl);
+    try {
+      const podcast = await getPodcastDetail(id);
+      setActivePodcast(podcast);
+      setActiveEpisodeIndex(0);
+      setPreviousEpisode(null);
+      if (activePodcast?.episodes[1].episodeUrl) {
+        setNextEpisode(activePodcast.episodes[1].episodeUrl);
+      }
+      audioRef.current = new Audio(
+        podcast?.episodes[activeEpisodeIndex].episodeUrl,
+      );
+      audioRef.current.play();
+      setIsPlaying(true);
+    } catch (error) {
+      console.log(error);
     }
-    audioRef.current = new Audio(
-      podcast?.episodes[activeEpisodeIndex].episodeUrl,
-    );
-    audioRef.current.play();
-    setIsPlaying(true);
   };
 
   const selectEpisode = async (podcast: IPodcast, episodeUrl: string) => {
+    setIsPlayLoading(true);
+
     if (audioRef.current) {
       audioRef.current.pause();
     }
@@ -116,14 +128,21 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
       setNextEpisode(podcast.episodes[1].episodeUrl);
     }
     audioRef.current = new Audio(episodeUrl);
-    audioRef.current.play();
+    audioRef.current
+      .play()
+      .catch((error) => {
+        console.warn('Play interrupted. Retrying in 500ms:', error);
+        setTimeout(tryPlay, 500);
+      })
+      .finally(() => setIsPlayLoading(false));
+
     setIsPlaying(true);
   };
 
   useEffect(() => {
     if (isPlaying) {
       if (audioRef.current) {
-        audioRef.current.play();
+        tryPlay();
       }
     } else {
       if (audioRef.current) {
@@ -160,6 +179,8 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
         setPreviousEpisode,
         nextEpisode,
         setNextEpisode,
+        isPlayLoading,
+        setIsPlayLoading,
       }}
     >
       {children}

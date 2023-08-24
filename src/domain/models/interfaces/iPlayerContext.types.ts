@@ -27,4 +27,6 @@ export interface PlayerContextType {
     setPreviousEpisode: (episodeUrl: string | null) => void;
     nextEpisode: string | null;
     setNextEpisode: (episodeUrl: string | null) => void;
+    isPlayLoading: boolean;
+    setIsPlayLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }

@@ -32,7 +32,7 @@ export const SubSearchBar: React.FC<SubSearchBarProps> = ({
     setIsActiveSearch((prevState: any) => !prevState);
   };
 
-  const { isPlaying, togglePlay, activePodcast, selectPodcast } =
+  const { isPlaying, togglePlay, activePodcast, selectPodcast, isPlayLoading } =
     usePlayerContext();
 
   return (
@@ -46,6 +46,7 @@ export const SubSearchBar: React.FC<SubSearchBarProps> = ({
               <Button
                 className={styles.buttonHead}
                 onClick={() => togglePlay()}
+                disabled={isPlayLoading}
               >
                 <Pause />
               </Button>
@@ -53,6 +54,7 @@ export const SubSearchBar: React.FC<SubSearchBarProps> = ({
               <Button
                 className={styles.buttonHead}
                 onClick={() => selectPodcast(podcast.id)}
+                disabled={isPlayLoading}
               >
                 <Play />
               </Button>

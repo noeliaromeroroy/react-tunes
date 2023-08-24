@@ -24,6 +24,7 @@ const PlayerBar: React.FC = () => {
     setNextEpisode,
     togglePlay,
     setActiveEpisodeIndex,
+    isPlayLoading,
   } = usePlayerContext();
   const [currentTime, setCurrentTime] = useState('0:00');
   const [duration, setDuration] = useState('0:00');
@@ -38,7 +39,6 @@ const PlayerBar: React.FC = () => {
     if (audio) {
       const newTime = (percentage / 100) * audio.duration;
       audio.currentTime = newTime;
-
       setAudioProgress(percentage);
       setCurrentTime(formatTime(newTime));
       if (percentage === 100) setIsPlaying(false);
@@ -136,13 +136,15 @@ const PlayerBar: React.FC = () => {
   useEffect(() => {
     if (audio) {
       const updateDuration = () => {
-        setDuration(formatTime(audio.duration));
+        if (audio.duration) setDuration(formatTime(audio.duration));
       };
 
       const handleTimeUpdate = () => {
         if (!isDragging.current) {
           setCurrentTime(formatTime(audio.currentTime));
-          setAudioProgress((audio.currentTime * 100) / audio.duration);
+          if (audio.currentTime > 0) {
+            setAudioProgress((audio.currentTime * 100) / audio.duration);
+          }
         }
       };
 
@@ -243,9 +245,10 @@ const PlayerBar: React.FC = () => {
         <div className={styles.progress}>
           <span>{currentTime}</span>
           <Slider
-            min="0"
-            max={!activePodcast ? 0 : duration}
-            value={!activePodcast ? 0 : audioProgress}
+            min={0}
+            max={duration}
+            value={audioProgress}
+            defaultValue={0}
             onChange={handleSliderChange}
             className={`${styles.progressBar} w-full`}
           />

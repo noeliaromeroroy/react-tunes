@@ -17,7 +17,7 @@ export const DetailTable: React.FC<DetailTableProps> = ({
   podcast,
   filteredEpisodes,
 }) => {
-  const { selectEpisode } = usePlayerContext();
+  const { selectEpisode, isPlayLoading } = usePlayerContext();
 
   return (
     <table className="Table" data-cy={`detail-${podcast.id}`}>
@@ -44,6 +44,7 @@ export const DetailTable: React.FC<DetailTableProps> = ({
                 <Button
                   className="bg-transparent p-3 rounded-full"
                   data-cy={`play-detail-${episode.id}`}
+                  disabled={isPlayLoading}
                   onClick={() => {
                     selectEpisode(podcast, episode.episodeUrl);
                   }}

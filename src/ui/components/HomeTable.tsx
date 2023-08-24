@@ -13,7 +13,7 @@ interface HomeTableProps {
 }
 
 export const HomeTable: React.FC<HomeTableProps> = ({ podcasts }) => {
-  const { activePodcast, isPlaying, togglePlay, selectPodcast } =
+  const { activePodcast, isPlaying, togglePlay, selectPodcast, isPlayLoading } =
     usePlayerContext();
 
   return (
@@ -42,6 +42,7 @@ export const HomeTable: React.FC<HomeTableProps> = ({ podcasts }) => {
                       data-cy={`play-${id}`}
                       onClick={() => selectPodcast(id)}
                       id={`play-${id}`}
+                      disabled={isPlayLoading}
                     >
                       <Play />
                     </Button>
@@ -50,6 +51,7 @@ export const HomeTable: React.FC<HomeTableProps> = ({ podcasts }) => {
                       data-cy={`play-${id}`}
                       className="bg-transparent p-0 y-0"
                       onClick={() => togglePlay()}
+                      disabled={isPlayLoading}
                     >
                       {isPlaying ? <Pause /> : <Play />}
                     </Button>
