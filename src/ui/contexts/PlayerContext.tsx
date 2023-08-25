@@ -3,8 +3,8 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { PlayerContextType } from '../../domain/models/interfaces/iPlayerContext.types';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 
-import { useAudioManager } from '../hooks/audioHooks';
-import { usePlayerControls } from '../hooks/playerHooks';
+import { useAudioManager } from '../hooks/useAudio';
+import { usePlayerControls } from '../hooks/usePlayer';
 
 const PlayerContext = createContext<PlayerContextType>({
   country: null,

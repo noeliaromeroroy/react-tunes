@@ -1,3 +1,4 @@
+
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 
 export const searchPodcasts = async (term: string): Promise<IPodcast[]> => {
@@ -36,55 +37,49 @@ export const searchPodcasts = async (term: string): Promise<IPodcast[]> => {
   }
 };
 
-export const getPodcastDetail = async (
-  id: string,
-): Promise<IPodcast | null> => {
-  try {
-    const response = await fetch(
-      `https://itunes.apple.com/lookup?id=${id}&media=podcast&entity=podcastEpisode&limit=100`,
-    );
+export const fetchDetail = async (id: string): Promise<IPodcast> => {
+  const response = await fetch(
+    `https://itunes.apple.com/lookup?id=${id}&media=podcast&entity=podcastEpisode&limit=100`,
+  );
 
-    if (!response.ok) {
-      throw new Error(
-        `iTunes Error: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    const data = await response.json();
-
-    if (data.resultCount === 0) {
-      throw new Error('Podcast not found');
-    }
-
-    const podcastDetail: IPodcast = {
-      id: id,
-      title: data.results[0].collectionName,
-      description: data.results[0].collectionCensoredName,
-      author: data.results[0].artistName,
-      episodes: [],
-      coverImageUrl: data.results[0].artworkUrl600,
-      releaseDate: data.results[0].releaseDate,
-      feedUrl: data.results[0].feedUrl,
-    };
-
-    data.results.shift();
-
-    podcastDetail.episodes = data.results.map((result: any) => ({
-      id: result.trackId.toString(),
-      title: result.trackName,
-      topic: result.description,
-      duration: result.trackTimeMillis,
-      cover: result.artworkUrl600,
-      releaseDate: result.releaseDate,
-      episodeUrl: result.episodeUrl,
-    }));
-
-    return podcastDetail;
-  } catch (error) {
-    console.error(error);
-    throw error;
+  if (!response.ok) {
+    throw new Error(`iTunes Error: ${response.status} ${response.statusText}`);
   }
+
+  const data = await response.json();
+
+  if (data.resultCount === 0) {
+    throw new Error('Podcast not found');
+  }
+
+  const podcastDetail: IPodcast = {
+    id: id,
+    title: data.results[0].collectionName,
+    description: data.results[0].collectionCensoredName,
+    author: data.results[0].artistName,
+    episodes: [],
+    coverImageUrl: data.results[0].artworkUrl600,
+    releaseDate: data.results[0].releaseDate,
+    feedUrl: data.results[0].feedUrl,
+  };
+
+  data.results.shift();
+
+  podcastDetail.episodes = data.results.map((result: any) => ({
+    id: result.trackId.toString(),
+    title: result.trackName,
+    topic: result.description,
+    duration: result.trackTimeMillis,
+    cover: result.artworkUrl600,
+    releaseDate: result.releaseDate,
+    episodeUrl: result.episodeUrl,
+  }));
+
+  return podcastDetail;
 };
+
+
+
 export const getFeaturedPodcast = async (
   country_code?: string,
 ): Promise<IPodcast[]> => {

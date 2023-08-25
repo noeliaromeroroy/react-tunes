@@ -10,7 +10,7 @@ import CardPodcast from '../../components/CardPodcast';
 import {
   useFeaturedPodcasts,
   useFilteredAndSortedPodcasts,
-} from '../../hooks/podcastHooks';
+} from '../../hooks/usePodcast';
 
 import styles from './HomePage.module.css';
 

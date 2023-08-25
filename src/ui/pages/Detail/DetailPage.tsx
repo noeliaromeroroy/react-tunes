@@ -5,8 +5,8 @@ import { SubSearchBar } from '../../components/SubSearchBar';
 import { DetailTable } from '../../components/DetailTable';
 import styles from './DetailPage.module.css';
 import '../../../assets/styles/index.css';
-import { useFilteredAndSortedEpisodes } from '../../hooks/episodeHooks';
-import { usePodcastDetails } from '../../hooks/podcastHooks';
+import { useFilteredAndSortedEpisodes } from '../../hooks/useEpisode';
+import { usePodcastDetails } from '../../hooks/usePodcast';
 function Detail(): JSX.Element {
   const { id } = useParams();
 

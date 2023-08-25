@@ -1,6 +1,6 @@
 import {
   searchPodcasts,
-  getPodcastDetail,
+  fetchDetail,
 } from '../src/infrastructure/services/ITunesPodcastService';
 
 import {
@@ -97,7 +97,7 @@ describe('searchPodcasts', () => {
   });
 });
 
-describe('getPodcastDetail', () => {
+describe('fetchDetail', () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
@@ -111,7 +111,7 @@ describe('getPodcastDetail', () => {
 
     global.fetch = mockFetch;
 
-    const result = await getPodcastDetail('160904630');
+    const result = await fetchDetail('160904630');
 
     expect(mockFetch).toHaveBeenCalledWith(
       'https://itunes.apple.com/lookup?id=160904630&media=podcast&entity=podcastEpisode&limit=100',
@@ -145,7 +145,7 @@ describe('getPodcastDetail', () => {
 
     global.fetch = mockFetch;
 
-    await expect(getPodcastDetail('123456789123456789')).rejects.toThrow(
+    await expect(fetchDetail('123456789123456789')).rejects.toThrow(
       'Podcast not found',
     );
   });
@@ -155,9 +155,7 @@ describe('getPodcastDetail', () => {
 
     global.fetch = mockFetch;
 
-    await expect(getPodcastDetail('160904630')).rejects.toThrow(
-      'Network failure',
-    );
+    await expect(fetchDetail('160904630')).rejects.toThrow('Network failure');
   });
 
   it('should throw an iTunes error when response is not ok', async () => {

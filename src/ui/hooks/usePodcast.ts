@@ -4,10 +4,12 @@ import { getUserCountry } from '../../infrastructure/services/NominatimService';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 import { usePlayerContext } from '../contexts/PlayerContext';
 import { searchPodcasts } from '../../infrastructure/services/ITunesPodcastService';
-import { getPodcastDetail } from '../../infrastructure/services/ITunesPodcastService';
+import { useCache } from '../../ui/contexts/CacheContext';
+import { getPodcastDetail } from './utils/cacheManager';
 
 export const useFeaturedPodcasts = () => {
   const [isLoading, setIsLoading] = useState(true);
+
 
   const {
     setIsHome,
@@ -16,6 +18,7 @@ export const useFeaturedPodcasts = () => {
     country,
     setCountry,
   } = usePlayerContext();
+
 
   const getUserLocation = (): Promise<{ lat: string; lng: string } | null> => {
     return new Promise((resolve, reject) => {
@@ -133,9 +136,12 @@ export const usePodcastSearch = () => {
 export const usePodcastDetails = (id: string | undefined): IPodcast | null => {
   const [detailedPodcast, setDetailedPodcast] = useState<IPodcast | null>(null);
 
+  const { setCache, getCache } = useCache();
+
+
   useEffect(() => {
     const getEpisodes = async (podcastId: string) => {
-      const podcast = await getPodcastDetail(podcastId);
+      const podcast = await getPodcastDetail(podcastId, setCache, getCache);
       setDetailedPodcast(podcast);
     };
 

@@ -1,7 +1,7 @@
 import { Avatar, Button, Slider } from '@material-tailwind/react';
 
 import { usePlayerContext } from '../contexts/PlayerContext';
-import { usePlayerControls } from '../hooks/playerHooks';
+import { usePlayerControls } from '../hooks/usePlayer';
 import styles from './PlayerBar.module.css';
 import Shuffle from '../../assets/svg/shuffle-icon.svg';
 import Previous from '../../assets/svg/previous-icon.svg';

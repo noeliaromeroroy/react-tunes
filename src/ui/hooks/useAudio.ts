@@ -1,7 +1,9 @@
 import { useRef, useEffect, useState } from 'react';
 
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
-import { getPodcastDetail } from '../../infrastructure/services/ITunesPodcastService';
+import { useCache } from '../../ui/contexts/CacheContext';
+import { getPodcastDetail } from './utils/cacheManager';
+
 
 export const useAudioManager = () => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -9,6 +11,7 @@ export const useAudioManager = () => {
   const [activePodcast, setActivePodcast] = useState<IPodcast | null>(null);
   const [activeEpisodeIndex, setActiveEpisodeIndex] = useState<number>(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { setCache, getCache } = useCache();
 
   const togglePlay = (podcast?: IPodcast) => {
     if (!activePodcast && podcast) selectPodcast(podcast.id);
@@ -19,7 +22,7 @@ export const useAudioManager = () => {
     try {
       setIsPlaying(false);
       setIsPlayLoading(true);
-      const podcast = await getPodcastDetail(id);
+      const podcast = await getPodcastDetail(id, setCache, getCache);
       setActivePodcast(podcast);
       setActiveEpisodeIndex(0);
       if (activePodcast?.episodes[1].episodeUrl) {

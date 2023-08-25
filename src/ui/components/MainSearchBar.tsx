@@ -6,7 +6,7 @@ import { usePlayerContext } from '../contexts/PlayerContext';
 
 import styles from './MainSearchBar.module.css';
 import Back from '../../assets/svg/back-icon.svg';
-import { usePodcastSearch } from '../hooks/podcastHooks';
+import { usePodcastSearch } from '../hooks/usePodcast';
 
 export const MainSearchBar: React.FC = () => {
   const navigate = useNavigate();
