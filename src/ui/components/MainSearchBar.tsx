@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Input } from '@material-tailwind/react';
 
@@ -6,23 +6,18 @@ import { usePlayerContext } from '../contexts/PlayerContext';
 
 import styles from './MainSearchBar.module.css';
 import Back from '../../assets/svg/back-icon.svg';
-import { usePodcastSearch } from '../hooks/usePodcast';
 
 export const MainSearchBar: React.FC = () => {
   const navigate = useNavigate();
-  const { results, isHome } = usePlayerContext();
 
-  const { search } = usePodcastSearch();
+  const { results, isHome, setSearchTerm } = usePlayerContext();
 
   const handleKeyDown = async (
     event: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (event.key === 'Enter') {
-      const searchTerm = (event.target as HTMLInputElement).value;
-      if (searchTerm) {
-        await search(searchTerm);
-        navigate('/');
-      }
+      const term = (event.target as HTMLInputElement).value;
+      setSearchTerm(term);
     }
   };
 

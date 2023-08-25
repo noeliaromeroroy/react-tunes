@@ -1,10 +1,15 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from 'react';
 
 import { PlayerContextType } from '../../domain/models/interfaces/iPlayerContext.types';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 
 import { useAudioManager } from '../hooks/useAudio';
-import { usePlayerControls } from '../hooks/usePlayer';
 
 const PlayerContext = createContext<PlayerContextType>({
   country: null,
@@ -34,6 +39,10 @@ const PlayerContext = createContext<PlayerContextType>({
   setNextEpisode: (value: React.SetStateAction<string | null>) => true,
   isPlayLoading: false,
   setIsPlayLoading: (value: React.SetStateAction<boolean>) => false,
+  isSearching: false,
+  setIsSearching: (value: React.SetStateAction<boolean>) => false,
+  searchTerm: null,
+  setSearchTerm: (value: React.SetStateAction<string | null>) => null,
 });
 
 export const usePlayerContext = (): PlayerContextType => {
@@ -51,6 +60,8 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   const [isHome, setIsHome] = useState<boolean>(true);
   const [previousEpisode, setPreviousEpisode] = useState<string | null>(null);
   const [nextEpisode, setNextEpisode] = useState<string | null>(null);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string | null>('');
 
   const [country, setCountry] = useState<string | null>('the world');
 
@@ -108,6 +119,10 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
         setNextEpisode,
         isPlayLoading,
         setIsPlayLoading,
+        isSearching,
+        setIsSearching,
+        searchTerm,
+        setSearchTerm,
       }}
     >
       {children}

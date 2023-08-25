@@ -1,13 +1,21 @@
 
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 
-export const searchPodcasts = async (term: string): Promise<IPodcast[]> => {
+export const searchPodcasts = async (term: string | null, limit?: number, page?: number): Promise<IPodcast[]> => {
   const url = new URL('https://itunes.apple.com/search');
+
+  let offset = 0;
+  if (limit && page) {
+    offset = limit * page;
+  }
+
   const params = {
-    limit: 200,
+    limit: limit || 10,
+    offset,
     term,
     media: 'podcast',
   };
+
 
   try {
     url.search = new URLSearchParams(params as any).toString();

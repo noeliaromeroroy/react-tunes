@@ -121,23 +121,10 @@ export const useFilteredAndSortedPodcasts = (
   }, [orderBy, filterValue, isActiveSearch, results, setFilteredResults]);
 };
 
-export const usePodcastSearch = () => {
-  const { setResults, setFilteredResults } = usePlayerContext();
-
-  const search = async (term: string) => {
-    const podcasts = await searchPodcasts(term);
-    setResults(podcasts);
-    setFilteredResults(podcasts);
-  };
-
-  return { search };
-};
-
 export const usePodcastDetails = (id: string | undefined): IPodcast | null => {
   const [detailedPodcast, setDetailedPodcast] = useState<IPodcast | null>(null);
 
   const { setCache, getCache } = useCache();
-
 
   useEffect(() => {
     const getEpisodes = async (podcastId: string) => {

@@ -1,26 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { usePlayerContext } from '../../contexts/PlayerContext';
 import { SubSearchBar } from '../../components/SubSearchBar';
 import { HomeTable } from '../../components/HomeTable';
 import { IPodcast } from '../../../domain/models/interfaces/iPodcast.types';
 import '../../../assets/styles/index.css';
-import { Spinner } from '@material-tailwind/react';
+import { Button, Spinner } from '@material-tailwind/react';
 import CardPodcast from '../../components/CardPodcast';
 import {
   useFeaturedPodcasts,
   useFilteredAndSortedPodcasts,
 } from '../../hooks/usePodcast';
+import { searchPodcasts } from '../../../infrastructure/services/ITunesPodcastService';
+
+import { useSearchLogic } from '../../hooks/useSearchLogic';
 
 import styles from './HomePage.module.css';
 
-function Search(): JSX.Element {
+function Home(): JSX.Element {
   const {
     results,
     filteredResults,
     setFilteredResults,
     featuredPodcast,
     country,
+    searchTerm,
+    setResults,
   } = usePlayerContext();
 
   const { isLoading } = useFeaturedPodcasts();
@@ -37,10 +42,23 @@ function Search(): JSX.Element {
     setFilteredResults,
   );
 
+  const { loadMore } = useSearchLogic();
+
+  useEffect(() => {
+    const callSearch = async () => {
+      if (searchTerm) {
+        const podcasts = await searchPodcasts(searchTerm, 10, 0);
+        setFilteredResults(podcasts);
+        setResults(podcasts);
+      }
+    };
+    callSearch();
+  }, [searchTerm]);
+
   return (
     <div id="HomePage">
       {filteredResults.length > 0 ? (
-        <>
+        <div className="pb-[200px]">
           <SubSearchBar
             orderBy={orderBy}
             setOrderBy={setOrderBy}
@@ -54,7 +72,8 @@ function Search(): JSX.Element {
             ]}
           />
           <HomeTable podcasts={filteredResults} />
-        </>
+          <Button onClick={() => loadMore()}>Load More</Button>
+        </div>
       ) : (
         <>
           {isLoading ? (
@@ -78,4 +97,4 @@ function Search(): JSX.Element {
   );
 }
 
-export default Search;
+export default Home;
