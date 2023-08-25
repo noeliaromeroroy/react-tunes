@@ -1,5 +1,11 @@
+
+
 import React, { createContext } from 'react';
-import { IPodcast } from './iPodcast.types';
+import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
+
+export interface ErrorContextType {
+    handleError: (error: any) => void;
+}
 
 export interface PlayerContextType {
     featuredPodcast: IPodcast[];
@@ -33,4 +39,10 @@ export interface PlayerContextType {
     setIsSearching: React.Dispatch<React.SetStateAction<boolean>>;
     searchTerm: string | null;
     setSearchTerm: (searchTerm: string | null) => void;
+}
+
+export interface CacheContextType {
+    podcastMap: Map<string, IPodcast> | null;
+    setPodcastMap: React.Dispatch<React.SetStateAction<Map<string, IPodcast> | null>>;
+
 }

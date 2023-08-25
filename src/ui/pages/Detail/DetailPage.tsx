@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
-
+import { Button } from '@material-tailwind/react';
 import { SubSearchBar } from '../../components/SubSearchBar';
 import { DetailTable } from '../../components/DetailTable';
 import styles from './DetailPage.module.css';

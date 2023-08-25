@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 
-import { PlayerContextType } from '../../domain/models/interfaces/iPlayerContext.types';
+import { PlayerContextType } from '../interfaces/iContexts';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 
 import { useAudioManager } from '../hooks/useAudio';
@@ -81,12 +81,13 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   } = useAudioManager();
 
   const setCurrentAudio = (newAudio: string) => {
-    console.log('entra setcurrent');
     if (audioRef.current) {
       audioRef.current.pause();
     }
     audioRef.current = new Audio(newAudio);
     audioRef.current.play().finally(() => setIsPlayLoading(false));
+
+    setIsPlaying(true);
   };
 
   return (
