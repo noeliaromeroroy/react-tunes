@@ -1,15 +1,10 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-  useRef,
-} from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 import { PlayerContextType } from '../../domain/models/interfaces/iPlayerContext.types';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
-import { getPodcastDetail } from '../../infrastructure/services/ITunesPodcastService';
+
+import { useAudioManager } from '../hooks/audioHooks';
+import { usePlayerControls } from '../hooks/playerHooks';
 
 const PlayerContext = createContext<PlayerContextType>({
   country: null,
@@ -54,102 +49,34 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   const [results, setResults] = useState<IPodcast[]>([]);
   const [filteredResults, setFilteredResults] = useState<IPodcast[]>([]);
   const [isHome, setIsHome] = useState<boolean>(true);
-  const [activePodcast, setActivePodcast] = useState<IPodcast | null>(null);
-  const [activeEpisodeIndex, setActiveEpisodeIndex] = useState<number>(0);
   const [previousEpisode, setPreviousEpisode] = useState<string | null>(null);
   const [nextEpisode, setNextEpisode] = useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [isPlayLoading, setIsPlayLoading] = useState<boolean>(false);
+
   const [country, setCountry] = useState<string | null>('the world');
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  const tryPlay = () => {
-    setIsPlayLoading(true);
-    if (audioRef.current) {
-      audioRef.current
-        .play()
-        .catch(() => {
-          setTimeout(tryPlay, 500);
-        })
-        .finally(() => setIsPlayLoading(false));
-    }
-  };
+  const {
+    isPlaying,
+    setIsPlaying,
+    isPlayLoading,
+    setIsPlayLoading,
+    activePodcast,
+    setActivePodcast,
+    activeEpisodeIndex,
+    setActiveEpisodeIndex,
+    audioRef,
+    togglePlay,
+    selectPodcast,
+    selectEpisode,
+  } = useAudioManager();
 
   const setCurrentAudio = (newAudio: string) => {
+    console.log('entra setcurrent');
     if (audioRef.current) {
       audioRef.current.pause();
     }
     audioRef.current = new Audio(newAudio);
-    tryPlay();
+    audioRef.current.play().finally(() => setIsPlayLoading(false));
   };
-
-  const togglePlay = (podcast?: IPodcast) => {
-    if (!activePodcast && podcast) selectPodcast(podcast.id);
-    setIsPlaying((prevIsPlaying) => !prevIsPlaying);
-  };
-
-  const selectPodcast = async (id: string) => {
-    setIsPlaying(false);
-
-    try {
-      const podcast = await getPodcastDetail(id);
-      setActivePodcast(podcast);
-      setActiveEpisodeIndex(0);
-      setPreviousEpisode(null);
-      if (activePodcast?.episodes[1].episodeUrl) {
-        setNextEpisode(activePodcast.episodes[1].episodeUrl);
-      }
-      audioRef.current = new Audio(
-        podcast?.episodes[activeEpisodeIndex].episodeUrl,
-      );
-      audioRef.current.play();
-      setIsPlaying(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const selectEpisode = async (podcast: IPodcast, episodeUrl: string) => {
-    setIsPlayLoading(true);
-
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-
-    const index = podcast.episodes.findIndex(
-      (episode) => episode.episodeUrl === episodeUrl,
-    );
-
-    setActivePodcast(podcast);
-    setActiveEpisodeIndex(index);
-
-    if (index === 0 && podcast?.episodes[1].episodeUrl) {
-      setNextEpisode(podcast.episodes[1].episodeUrl);
-    }
-    audioRef.current = new Audio(episodeUrl);
-    audioRef.current
-      .play()
-      .catch((error) => {
-        console.warn('Play interrupted. Retrying in 500ms:', error);
-        setTimeout(tryPlay, 500);
-      })
-      .finally(() => setIsPlayLoading(false));
-
-    setIsPlaying(true);
-  };
-
-  useEffect(() => {
-    if (isPlaying) {
-      if (audioRef.current) {
-        tryPlay();
-      }
-    } else {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-    }
-  }, [isPlaying]);
 
   return (
     <PlayerContext.Provider

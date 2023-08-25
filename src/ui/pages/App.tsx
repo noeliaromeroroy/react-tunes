@@ -4,6 +4,7 @@ import Detail from './Detail/DetailPage';
 import PlayerBar from '../components/PlayerBar';
 import { MainSearchBar } from '../components/MainSearchBar';
 import { PlayerProvider } from '../contexts/PlayerContext';
+
 function App(): JSX.Element {
   return (
     <PlayerProvider>

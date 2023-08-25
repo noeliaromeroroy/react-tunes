@@ -3,14 +3,16 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { Input } from '@material-tailwind/react';
 
 import { usePlayerContext } from '../contexts/PlayerContext';
-import { searchPodcasts } from '../../infrastructure/services/ITunesPodcastService';
+
 import styles from './MainSearchBar.module.css';
 import Back from '../../assets/svg/back-icon.svg';
+import { usePodcastSearch } from '../hooks/podcastHooks';
 
 export const MainSearchBar: React.FC = () => {
   const navigate = useNavigate();
-  const { results, setResults, isHome, setFilteredResults } =
-    usePlayerContext();
+  const { results, isHome } = usePlayerContext();
+
+  const { search } = usePodcastSearch();
 
   const handleKeyDown = async (
     event: React.KeyboardEvent<HTMLInputElement>,
@@ -18,9 +20,7 @@ export const MainSearchBar: React.FC = () => {
     if (event.key === 'Enter') {
       const searchTerm = (event.target as HTMLInputElement).value;
       if (searchTerm) {
-        const podcasts = await searchPodcasts(searchTerm);
-        setResults(podcasts);
-        setFilteredResults(podcasts);
+        await search(searchTerm);
         navigate('/');
       }
     }

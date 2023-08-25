@@ -19,7 +19,7 @@ import {
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 
 export default function CardPodcast(podcast: IPodcast) {
-  const { activePodcast, isPlaying, togglePlay, selectPodcast } =
+  const { activePodcast, isPlaying, togglePlay, selectPodcast, isPlayLoading } =
     usePlayerContext();
 
   return (
@@ -58,6 +58,7 @@ export default function CardPodcast(podcast: IPodcast) {
             data-cy={`play-${podcast.id}`}
             onClick={() => selectPodcast(podcast.id)}
             id={`play-${podcast.id}`}
+            disabled={isPlayLoading}
           >
             <Play />
           </Button>
@@ -66,6 +67,7 @@ export default function CardPodcast(podcast: IPodcast) {
             data-cy={`play-${podcast.id}`}
             className={styles.action}
             onClick={() => togglePlay()}
+            disabled={isPlayLoading}
           >
             {isPlaying ? <Pause /> : <Play />}
           </Button>
