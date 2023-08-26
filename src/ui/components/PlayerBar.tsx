@@ -79,6 +79,7 @@ const PlayerBar: React.FC = () => {
             data-cy="btn-prev"
             onClick={() => playPreviousEpisode()}
             disabled={
+              isPlayLoading ||
               !activePodcast ||
               activeEpisodeIndex === activePodcast.episodes.length - 1
             }
@@ -101,6 +102,7 @@ const PlayerBar: React.FC = () => {
             data-cy="btn-next"
             onClick={() => playNextEpisode()}
             disabled={
+              isPlayLoading ||
               !activePodcast ||
               (activeEpisodeIndex === 0 &&
                 !isShuffleActivated &&

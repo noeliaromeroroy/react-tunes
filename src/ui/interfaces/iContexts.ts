@@ -3,8 +3,17 @@
 import React, { createContext } from 'react';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 
+
+
+export interface CustomError {
+    type: string;
+    message: string;
+}
+
+
 export interface ErrorContextType {
-    handleError: (error: any) => void;
+    error: Error | CustomError | null,
+    setError: React.Dispatch<React.SetStateAction<Error | CustomError | null>>
 }
 
 export interface PlayerContextType {

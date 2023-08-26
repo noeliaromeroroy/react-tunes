@@ -3,6 +3,8 @@ import { useRef, useEffect, useState } from 'react';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 import { useCache } from '../../ui/contexts/CacheContext';
 import { getPodcastDetail } from './utils/cacheManager';
+import { useErrorHandler } from '../hooks/useError';
+import { CustomError } from '../interfaces/iContexts';
 
 
 export const useAudioManager = () => {
@@ -12,6 +14,8 @@ export const useAudioManager = () => {
   const [activeEpisodeIndex, setActiveEpisodeIndex] = useState<number>(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { setCache, getCache } = useCache();
+  const { handleError } = useErrorHandler();
+
 
   const togglePlay = (podcast?: IPodcast) => {
     if (!activePodcast && podcast) selectPodcast(podcast.id);
@@ -33,34 +37,51 @@ export const useAudioManager = () => {
       audioRef.current.play().finally(() => setIsPlayLoading(false));
       setIsPlaying(true);
     } catch (error) {
-      console.log('AQUI');
+      handleError(error);
     }
   };
 
   const selectEpisode = async (podcast: IPodcast, episodeUrl: string) => {
     setIsPlayLoading(true);
+    try {
 
-    if (audioRef.current) {
-      audioRef.current.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+
+      const index = podcast.episodes.findIndex(
+        (episode) => episode.episodeUrl === episodeUrl,
+      );
+
+      setActivePodcast(podcast);
+      setActiveEpisodeIndex(index);
+      audioRef.current = new Audio(episodeUrl);
+
+      audioRef.current.play().catch((err) => {
+        const playErr: CustomError = {
+          type: "playErr",
+          message: `An error occurred while trying to play the podcast. Original error: ${err.message}`
+        }
+        handleError(playErr);
+      }).finally(() => setIsPlayLoading(false));
+      setIsPlaying(true);
+    } catch (error) {
+      handleError(error);
     }
-
-    const index = podcast.episodes.findIndex(
-      (episode) => episode.episodeUrl === episodeUrl,
-    );
-
-    setActivePodcast(podcast);
-    setActiveEpisodeIndex(index);
-    audioRef.current = new Audio(episodeUrl);
-
-    audioRef.current.play().finally(() => setIsPlayLoading(false));
-    setIsPlaying(true);
   };
 
   useEffect(() => {
     const play = async () => {
       if (isPlaying) {
         if (audioRef.current) {
-          audioRef.current.play().finally(() => setIsPlayLoading(false));
+          audioRef.current.play().catch((err) => {
+            handleError(err);
+            const playErr: CustomError = {
+              type: "playErr",
+              message: `An error occurred while trying to play the podcast. Original error: ${err.message}`
+            }
+            handleError(playErr);
+          }).finally(() => setIsPlayLoading(false));
         }
       } else {
         if (audioRef.current) {

@@ -1,9 +1,10 @@
 import { createContext, useContext, ReactNode, useState } from 'react';
-import { ErrorContextType } from '../interfaces/iContexts';
+import { ErrorContextType, CustomError } from '../interfaces/iContexts';
 import { Alert } from '@material-tailwind/react';
 
 const ErrorContext = createContext<ErrorContextType>({
-  handleError: (error: any) => {},
+  error: null,
+  setError: (value: React.SetStateAction<Error | CustomError | null>) => null,
 });
 
 export const useErrorContext = (): ErrorContextType => {
@@ -15,25 +16,33 @@ interface ErrorProviderProps {
 }
 
 export const ErrorProvider: React.FC<ErrorProviderProps> = ({ children }) => {
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<Error | CustomError | null>(null);
 
-  const handleError = (err: any) => {
-    setError(err);
+  const clearError = () => {
+    setError(null);
   };
 
   return (
-    <ErrorContext.Provider value={{ handleError }}>
-      <div className="flex w-full flex-col gap-2">
+    <ErrorContext.Provider
+      value={{
+        error,
+        setError,
+      }}
+    >
+      <div className="flex w-[90%] flex-col gap-2 absolute t-3 z-10">
         {error && (
           <Alert
             color="red"
-            onClose={() => setError(null)}
+            onClose={clearError}
             animate={{
               mount: { y: 0 },
               unmount: { y: 100 },
             }}
           >
-            {error.message}
+            {'type' in error && error.type === 'playErr' && (
+              <h1>Error playing podcast</h1>
+            )}
+            <p>{error.message}</p>
           </Alert>
         )}
       </div>

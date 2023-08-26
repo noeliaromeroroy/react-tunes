@@ -81,10 +81,12 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   } = useAudioManager();
 
   const setCurrentAudio = (newAudio: string) => {
+    setIsPlayLoading(true);
     if (audioRef.current) {
       audioRef.current.pause();
     }
     audioRef.current = new Audio(newAudio);
+
     audioRef.current.play().finally(() => setIsPlayLoading(false));
 
     setIsPlaying(true);

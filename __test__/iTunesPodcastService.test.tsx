@@ -24,7 +24,7 @@ describe('searchPodcasts', () => {
     const result = await searchPodcasts('test');
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://itunes.apple.com/search?country=ES&lang=es_es&limit=200&term=test&media=podcast',
+      'https://itunes.apple.com/search?limit=10&offset=0&term=test&media=podcast',
     );
 
     expect(result).toEqual([
@@ -68,7 +68,7 @@ describe('searchPodcasts', () => {
     const result = await searchPodcasts('ThisTextDontReturnAnyPodcast');
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://itunes.apple.com/search?country=ES&lang=es_es&limit=200&term=ThisTextDontReturnAnyPodcast&media=podcast',
+      'https://itunes.apple.com/search?limit=10&offset=0&term=ThisTextDontReturnAnyPodcast&media=podcast',
     );
 
     expect(result).toEqual([]);
