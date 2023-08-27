@@ -113,7 +113,7 @@ Esto generará los ficheros necesarios para la puesta en producción del proyect
 
 He implementado un sistema de caché en el proyecto para mejorar la eficiencia al obtener detalles de podcasts.
 
-### ¿Cómo funciona?
+### ¿Cómo funciona?
 
 1. **Primera vez que solicitas un podcast:** Cuando pides información sobre un podcast por primera vez, el sistema la busca en la API de iTunes y la muestra. Pero además, guarda una copia de esa información en una "memoria temporal" llamada caché.
 
@@ -134,7 +134,8 @@ Para mejorar la experiencia de usuario y optimizar la carga de datos, he impleme
 
 Este enfoque de paginación garantiza que no se sobrecargue la página con demasiados resultados a la vez, proporcionando una navegación más fluida y rápida para el usuario.
 
-## Control de Errores 🐛
+## Control de Errores 🐛
+
 La robustez y estabilidad de una aplicación no solo dependen de sus características y funcionalidades, sino también de cómo maneja y responde ante situaciones inesperadas o errores. En este proyecto, he puesto un énfasis especial en el control de errores para garantizar una experiencia de usuario sin contratiempos.
 
 ### Handler Especial y Personalizable
@@ -168,7 +169,7 @@ Estas pruebas garantizan que las funcionalidades clave de la aplicación, como l
 
 Husky es una herramienta que facilita la adición hooks al proceso de control de versiones con Git. Estos hooks permiten ejecutar scripts o comandos específicos en ciertos momentos del flujo de trabajo de Git, como antes de hacer un commit o antes de hacer push.
 
-### Beneficios de usar Husky 
+### Beneficios de usar Husky 
 
 - **Automatización:** Garantiza que ciertos procesos o verificaciones se realicen automáticamente antes de acciones críticas, como hacer commit o push.
 
@@ -178,7 +179,7 @@ Husky es una herramienta que facilita la adición hooks al proceso de control de
 
 - **Prevención:** Puede prevenir que código defectuoso o no conforme a los estándares se añada al repositorio.
 
-### Detalles de los hooks
+### Detalles de los hooks
 
 #### commit-msg
 
