@@ -95,3 +95,12 @@ describe('Navigation tests', () => {
     );
   });
 });
+
+it('should type a word that does not return results, then type "tech" and show some results', () => {
+  cy.visit('http://localhost:9000/');
+  cy.get('[data-cy^=search-podcast]', { timeout: 20000 }).type('techadasdaasdadasdtech{enter}');
+  cy.get('[data-cy^=confused-icon]', { timeout: 20000 }).should('be.visible');
+  cy.get('[data-cy^=search-podcast]', { timeout: 20000 }).clear().type('react{enter}');
+  cy.url().should('eq', 'http://localhost:9000/search/react');
+  cy.get('[data-cy^=title-podcast-]', { timeout: 20000 }).should('be.visible');
+});
