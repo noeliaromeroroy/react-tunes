@@ -29,9 +29,11 @@
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
     "start": "webpack-dev-server --mode development --open",
-    "test": "npx jest",
+    "test": "npx jest && npx cypress run",
     "eject": "react-scripts eject",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "check-linter": "npx eslint --ext \".ts,.tsx\" .",
+    "fix-linter": "npx eslint --fix --ext \".ts,.tsx\" ."
   },
   "eslintConfig": {
     "extends": [
@@ -53,6 +55,8 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
     "@svgr/webpack": "^8.0.1",
     "@types/cypress": "^1.1.3",
     "@typescript-eslint/eslint-plugin": "^6.4.1",

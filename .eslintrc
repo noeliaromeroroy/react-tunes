@@ -1,28 +1,27 @@
 {
   // Configuration for JavaScript files
-  "extends": ["airbnb-base", "plugin:prettier/recommended"],
+  "extends": ["airbnb-base", "prettier"],
   "overrides": [
     {
       "files": ["**/*.ts", "**/*.tsx"],
       "plugins": ["tailwindcss", "simple-import-sort"],
-      "extends": [
-        "plugin:tailwindcss/recommended",
-        "airbnb",
-        "airbnb-typescript",
-        "prettier/react"
-      ],
+      "extends": ["plugin:tailwindcss/recommended", "airbnb", "airbnb-typescript", "plugin:prettier/recommended"],
       "parserOptions": {
         "project": "./tsconfig.json"
       },
       "rules": {
-        "no-console": "off",
+        "react/function-component-definition": "off",
         "react/no-array-index-key": "off",
-        "react/no-danger": "off"
+        "react/no-danger": "off",
+        "react/require-default-props": "off",
+        "jsx-a11y/click-events-have-key-events": "off",
+        "import/prefer-default-export": "off",
+        "no-nested-ternary": "off"
       }
     },
     {
       "files": ["**/*.js"],
-      "extends": ["airbnb-base", "prettier/react"]
+      "extends": ["airbnb-base"]
     }
   ]
 }

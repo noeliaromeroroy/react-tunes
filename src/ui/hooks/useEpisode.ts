@@ -5,32 +5,27 @@ export const useFilteredAndSortedEpisodes = (
   episodes: IEpisode[] | undefined,
   orderBy: string,
   filterValue: string,
-  isActiveSearch: boolean,
+  isActiveSearch: boolean
 ) => {
-  const [filteredEpisodes, setFilteredEpisodes] = useState<
-    IEpisode[] | undefined
-  >([]);
+  const [filteredEpisodes, setFilteredEpisodes] = useState<IEpisode[] | undefined>([]);
 
   useEffect(() => {
-    if (!isActiveSearch) filterValue = '';
+    let filter = filterValue;
+    if (!isActiveSearch) filter = '';
     if (episodes) {
-      let filteredResults = episodes.filter(
+      const filteredResults = episodes.filter(
         (episode) =>
-          episode.title.toLowerCase().includes(filterValue.toLowerCase()) ||
-          episode.topic.toLowerCase().includes(filterValue.toLowerCase()),
+          episode.title.toLowerCase().includes(filter.toLowerCase()) ||
+          episode.topic.toLowerCase().includes(filter.toLowerCase())
       );
-      let sortedData = [...filteredResults];
+      const sortedData = [...filteredResults];
 
       switch (orderBy) {
         case 'title':
           sortedData.sort((a, b) => a.title.localeCompare(b.title));
           break;
         case 'date':
-          sortedData.sort(
-            (a, b) =>
-              new Date(b.releaseDate).getTime() -
-              new Date(a.releaseDate).getTime(),
-          );
+          sortedData.sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime());
           break;
         case 'duration':
           sortedData.sort((a, b) => a.duration - b.duration);

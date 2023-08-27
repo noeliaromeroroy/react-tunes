@@ -1,12 +1,13 @@
+import React, { useState } from 'react';
+
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
-import { Button } from '@material-tailwind/react';
 import { SubSearchBar } from '../../components/SubSearchBar';
 import { DetailTable } from '../../components/DetailTable';
 import styles from './DetailPage.module.css';
 import '../../../assets/styles/index.css';
 import { useFilteredAndSortedEpisodes } from '../../hooks/useEpisode';
 import { usePodcastDetails } from '../../hooks/usePodcast';
+
 function Detail(): JSX.Element {
   const { id } = useParams();
 
@@ -20,19 +21,14 @@ function Detail(): JSX.Element {
     detailedPodcast?.episodes,
     orderBy,
     filterValue,
-    isActiveSearch,
+    isActiveSearch
   );
 
   return (
-    <>
+    <div className={styles.DetailedPage} id="DetailedPage">
       {detailedPodcast && (
-        <div className={styles.DetailedPage} id="DetailedPage">
-          <img
-            className={styles.featuredImage}
-            src={detailedPodcast.coverImageUrl}
-            alt={detailedPodcast.title}
-          />
-
+        <>
+          <img className={styles.featuredImage} src={detailedPodcast.coverImageUrl} alt={detailedPodcast.title} />
           <SubSearchBar
             orderBy={orderBy}
             setOrderBy={setOrderBy}
@@ -43,17 +39,13 @@ function Detail(): JSX.Element {
             options={[
               { value: 'title', label: 'Title' },
               { value: 'date', label: 'Date' },
-              { value: 'duration', label: 'Duration' },
+              { value: 'duration', label: 'Duration' }
             ]}
           />
-
-          <DetailTable
-            podcast={detailedPodcast}
-            filteredEpisodes={filteredDetailResults}
-          />
-        </div>
+          <DetailTable podcast={detailedPodcast} filteredEpisodes={filteredDetailResults} />
+        </>
       )}
-    </>
+    </div>
   );
 }
 

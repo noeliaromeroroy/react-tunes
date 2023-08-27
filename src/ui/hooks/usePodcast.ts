@@ -3,40 +3,35 @@ import { getFeaturedPodcast } from '../../infrastructure/services/ITunesPodcastS
 import { getUserCountry } from '../../infrastructure/services/NominatimService';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 import { usePlayerContext } from '../contexts/PlayerContext';
-import { searchPodcasts } from '../../infrastructure/services/ITunesPodcastService';
-import { useCache } from '../../ui/contexts/CacheContext';
+import { useCache } from '../contexts/CacheContext';
 import { getPodcastDetail } from './utils/cacheManager';
+import { CustomError, ErrorTypes } from '../interfaces/iContexts';
+import { useErrorHandler } from './useError';
 
 export const useFeaturedPodcasts = () => {
   const [isLoading, setIsLoading] = useState(true);
 
+  const { setIsHome, featuredPodcast, setFeaturedPodcast, country, setCountry } = usePlayerContext();
 
-  const {
-    setIsHome,
-    featuredPodcast,
-    setFeaturedPodcast,
-    country,
-    setCountry,
-  } = usePlayerContext();
-
+  const { handleError } = useErrorHandler();
 
   const getUserLocation = (): Promise<{ lat: string; lng: string } | null> => {
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(
-        function (position) {
+        function getCoords(position) {
           const coords = {
             lat: String(position.coords.latitude),
-            lng: String(position.coords.longitude),
+            lng: String(position.coords.longitude)
           };
           resolve(coords);
         },
-        function (error) {
+        function getError(error) {
           if (error.PERMISSION_DENIED) {
             resolve(null);
           } else {
             reject(error);
           }
-        },
+        }
       );
     });
   };
@@ -51,9 +46,7 @@ export const useFeaturedPodcasts = () => {
         if (coords) {
           const location = await getUserCountry(coords);
           if (location) {
-            podcastsByLocation = await getFeaturedPodcast(
-              location.country_code,
-            );
+            podcastsByLocation = await getFeaturedPodcast(location.country_code);
             setCountry(location.country);
           }
         } else {
@@ -61,8 +54,12 @@ export const useFeaturedPodcasts = () => {
         }
 
         setFeaturedPodcast(podcastsByLocation);
-      } catch (error) {
-        console.error('Error al establecer los podcast destacados:', error);
+      } catch (err: any) {
+        const playErr: CustomError = {
+          type: ErrorTypes.GET_PODCAST,
+          message: `An error occurred while trying to get the featured podcast list. Original error: ${err.message}`
+        };
+        handleError(playErr);
       } finally {
         setIsLoading(false);
       }
@@ -83,20 +80,20 @@ export const useFilteredAndSortedPodcasts = (
   orderBy: string,
   filterValue: string,
   isActiveSearch: boolean,
-  setFilteredResults: (results: IPodcast[]) => void,
+  setFilteredResults: (results: IPodcast[]) => void
 ) => {
+  const { handleError } = useErrorHandler();
   useEffect(() => {
     try {
-      if (!isActiveSearch) filterValue = '';
-      let filtered = results.filter(
+      let filter = filterValue;
+      if (!isActiveSearch) filter = '';
+      const filtered = results.filter(
         (podcast) =>
-          podcast.title.toLowerCase().includes(filterValue.toLowerCase()) ||
-          podcast.description
-            .toLowerCase()
-            .includes(filterValue.toLowerCase()) ||
-          podcast.author.toLowerCase().includes(filterValue.toLowerCase()),
+          podcast.title.toLowerCase().includes(filter.toLowerCase()) ||
+          podcast.description.toLowerCase().includes(filter.toLowerCase()) ||
+          podcast.author.toLowerCase().includes(filter.toLowerCase())
       );
-      let sortedData = [...filtered];
+      const sortedData = [...filtered];
       switch (orderBy) {
         case 'title':
           sortedData.sort((a, b) => a.title.localeCompare(b.title));
@@ -105,18 +102,18 @@ export const useFilteredAndSortedPodcasts = (
           sortedData.sort((a, b) => a.author.localeCompare(b.author));
           break;
         case 'date':
-          sortedData.sort(
-            (a, b) =>
-              new Date(b.releaseDate).getTime() -
-              new Date(a.releaseDate).getTime(),
-          );
+          sortedData.sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime());
           break;
         default:
           break;
       }
       setFilteredResults(sortedData);
-    } catch (error) {
-      console.error('Error al filtrar y ordenar los resultados:', error);
+    } catch (err: any) {
+      const playErr: CustomError = {
+        type: ErrorTypes.FILTER_PODCAST,
+        message: `An error occurred while trying to get the filter podcast list. Original error: ${err.message}`
+      };
+      handleError(playErr);
     }
   }, [orderBy, filterValue, isActiveSearch, results, setFilteredResults]);
 };

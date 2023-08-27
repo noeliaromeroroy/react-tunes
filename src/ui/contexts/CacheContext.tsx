@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, useMemo } from 'react';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
 
 type ContextType = {
@@ -8,7 +8,7 @@ type ContextType = {
   deleteCache: (key: string) => void;
 };
 
-type cacheBody = {
+type CacheBody = {
   expiry: Date;
   data: IPodcast;
 };
@@ -20,15 +20,12 @@ export function useCache() {
 }
 
 export default function CacheProvider({ children }: { children: ReactNode }) {
-  const cache = new Map<string, cacheBody>();
+  const cache = new Map<string, CacheBody>();
 
   function getCache(key: string) {
     const cacheValue = cache.get(key);
     if (!cacheValue) return undefined;
-    if (
-      cacheValue.expiry &&
-      new Date().getTime() > cacheValue.expiry.getTime()
-    ) {
+    if (cacheValue.expiry && new Date().getTime() > cacheValue.expiry.getTime()) {
       cache.delete(key);
       return undefined;
     }
@@ -37,11 +34,11 @@ export default function CacheProvider({ children }: { children: ReactNode }) {
 
   // TTL set to one hour by default
   function setCache(key: string, value: any, ttl: number = 3600) {
-    var t = new Date();
+    const t = new Date();
     t.setSeconds(t.getSeconds() + ttl);
     cache.set(key, {
       expiry: t,
-      data: value,
+      data: value
     });
   }
 
@@ -53,16 +50,15 @@ export default function CacheProvider({ children }: { children: ReactNode }) {
     cache.delete(key);
   }
 
-  const contextValue = {
-    getCache,
-    setCache,
-    clearCache,
-    deleteCache,
-  };
-
-  return (
-    <CacheContext.Provider value={contextValue}>
-      {children}
-    </CacheContext.Provider>
+  const contextValue = useMemo(
+    () => ({
+      getCache,
+      setCache,
+      clearCache,
+      deleteCache
+    }),
+    []
   );
+
+  return <CacheContext.Provider value={contextValue}>{children}</CacheContext.Provider>;
 }

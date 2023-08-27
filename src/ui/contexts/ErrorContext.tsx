@@ -1,10 +1,10 @@
-import { createContext, useContext, ReactNode, useState } from 'react';
+import React, { createContext, useContext, ReactNode, useState, useMemo } from 'react';
 import { ErrorContextType, CustomError } from '../interfaces/iContexts';
-import { Alert } from '@material-tailwind/react';
+import { ErrorAlert } from '../components/ErrorAlert';
 
 const ErrorContext = createContext<ErrorContextType>({
   error: null,
-  setError: (value: React.SetStateAction<Error | CustomError | null>) => null,
+  setError: () => null
 });
 
 export const useErrorContext = (): ErrorContextType => {
@@ -21,31 +21,16 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({ children }) => {
   const clearError = () => {
     setError(null);
   };
-
+  const errorValue = useMemo(
+    () => ({
+      error,
+      setError
+    }),
+    []
+  );
   return (
-    <ErrorContext.Provider
-      value={{
-        error,
-        setError,
-      }}
-    >
-      <div className="flex w-[90%] flex-col gap-2 absolute t-3 z-10">
-        {error && (
-          <Alert
-            color="red"
-            onClose={clearError}
-            animate={{
-              mount: { y: 0 },
-              unmount: { y: 100 },
-            }}
-          >
-            {'type' in error && error.type === 'playErr' && (
-              <h1>Error playing podcast</h1>
-            )}
-            <p>{error.message}</p>
-          </Alert>
-        )}
-      </div>
+    <ErrorContext.Provider value={errorValue}>
+      <ErrorAlert error={error} onClose={clearError} />
       {children}
     </ErrorContext.Provider>
   );

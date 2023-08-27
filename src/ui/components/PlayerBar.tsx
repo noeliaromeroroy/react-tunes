@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Avatar, Button, Slider } from '@material-tailwind/react';
 
 import { usePlayerContext } from '../contexts/PlayerContext';
@@ -12,13 +14,7 @@ import Next from '../../assets/svg/next-icon.svg';
 import Volume from '../../assets/svg/volume-icon.svg';
 
 const PlayerBar: React.FC = () => {
-  const {
-    activePodcast,
-    isPlaying,
-    activeEpisodeIndex,
-    togglePlay,
-    isPlayLoading,
-  } = usePlayerContext();
+  const { activePodcast, isPlaying, activeEpisodeIndex, togglePlay, isPlayLoading } = usePlayerContext();
 
   const {
     currentTime,
@@ -32,7 +28,7 @@ const PlayerBar: React.FC = () => {
     toggleRepeat,
     toggleShuffle,
     playPreviousEpisode,
-    playNextEpisode,
+    playNextEpisode
   } = usePlayerControls();
 
   return (
@@ -40,19 +36,11 @@ const PlayerBar: React.FC = () => {
       <div className={styles.podcastDetail}>
         {activePodcast && (
           <>
-            <Avatar
-              size="xxl"
-              variant="square"
-              src={activePodcast.coverImageUrl}
-            />
+            <Avatar size="xxl" variant="square" src={activePodcast.coverImageUrl} />
             <div className="flex flex-col justify-center">
-              <div
-                className={styles.podcastTitle}
-                data-cy="title-active-podcast"
-              >
+              <div className={styles.podcastTitle} data-cy="title-active-podcast">
                 {activePodcast.episodes[activeEpisodeIndex].title.slice(0, 35)}{' '}
-                {activePodcast.episodes[activeEpisodeIndex].title.length > 35 &&
-                  '...'}
+                {activePodcast.episodes[activeEpisodeIndex].title.length > 35 && '...'}
               </div>
               <div className={styles.podcastAuthor}>{activePodcast.author}</div>
             </div>
@@ -60,11 +48,7 @@ const PlayerBar: React.FC = () => {
         )}
       </div>
 
-      <div
-        className={`${styles.controlsBar} ${
-          !activePodcast ? 'opacity-40' : ''
-        }`}
-      >
+      <div className={`${styles.controlsBar} ${!activePodcast ? 'opacity-40' : ''}`}>
         <div className={styles.controls}>
           <Button
             data-cy="btn-shuffle"
@@ -78,11 +62,7 @@ const PlayerBar: React.FC = () => {
           <Button
             data-cy="btn-prev"
             onClick={() => playPreviousEpisode()}
-            disabled={
-              isPlayLoading ||
-              !activePodcast ||
-              activeEpisodeIndex === activePodcast.episodes.length - 1
-            }
+            disabled={isPlayLoading || !activePodcast || activeEpisodeIndex === activePodcast.episodes.length - 1}
           >
             <Previous />
           </Button>
@@ -92,21 +72,13 @@ const PlayerBar: React.FC = () => {
             onClick={() => togglePlay()}
             disabled={!activePodcast || isPlayLoading}
           >
-            {isPlaying && activePodcast ? (
-              <Pause data-cy="pause-icon" />
-            ) : (
-              <Play data-cy="play-icon" />
-            )}
+            {isPlaying && activePodcast ? <Pause data-cy="pause-icon" /> : <Play data-cy="play-icon" />}
           </Button>
           <Button
             data-cy="btn-next"
             onClick={() => playNextEpisode()}
             disabled={
-              isPlayLoading ||
-              !activePodcast ||
-              (activeEpisodeIndex === 0 &&
-                !isShuffleActivated &&
-                !isRepeatActivated)
+              isPlayLoading || !activePodcast || (activeEpisodeIndex === 0 && !isShuffleActivated && !isRepeatActivated)
             }
           >
             <Next />

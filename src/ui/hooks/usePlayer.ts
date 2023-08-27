@@ -11,7 +11,7 @@ export const usePlayerControls = () => {
     activeEpisodeIndex,
     setPreviousEpisode,
     setNextEpisode,
-    setActiveEpisodeIndex,
+    setActiveEpisodeIndex
   } = usePlayerContext();
 
   const [currentTime, setCurrentTime] = useState('0:00');
@@ -36,11 +36,7 @@ export const usePlayerControls = () => {
 
   const playPreviousEpisode = () => {
     const index = activeEpisodeIndex;
-    if (
-      activePodcast &&
-      audio &&
-      index + 1 <= activePodcast.episodes.length - 1
-    ) {
+    if (activePodcast && audio && index + 1 <= activePodcast.episodes.length - 1) {
       if (isRepeatActivated) {
         setCurrentAudio(activePodcast.episodes[index].episodeUrl);
       } else {
@@ -64,11 +60,7 @@ export const usePlayerControls = () => {
 
   const playNextEpisode = () => {
     const index = activeEpisodeIndex;
-    if (
-      activePodcast &&
-      audio &&
-      (index - 1 >= 0 || isShuffleActivated || isRepeatActivated)
-    ) {
+    if (activePodcast && audio && (index - 1 >= 0 || isShuffleActivated || isRepeatActivated)) {
       if (isRepeatActivated) {
         setCurrentAudio(activePodcast.episodes[index].episodeUrl);
       } else {
@@ -115,9 +107,7 @@ export const usePlayerControls = () => {
   const toggleShuffle = () => {
     setIsShuffleActivated((prevValue) => !prevValue);
     if (isShuffleActivated && activePodcast) {
-      setNextEpisode(
-        activePodcast.episodes[getRandomEpisodeIndex()].episodeUrl,
-      );
+      setNextEpisode(activePodcast.episodes[getRandomEpisodeIndex()].episodeUrl);
     }
   };
 
@@ -144,6 +134,8 @@ export const usePlayerControls = () => {
         audio.removeEventListener('loadedmetadata', updateDuration);
       };
     }
+    // eslint-disable-next-line prettier/prettier
+    return () => { };
   }, [audio]);
 
   return {
@@ -162,6 +154,6 @@ export const usePlayerControls = () => {
     toggleRepeat,
     toggleShuffle,
     playPreviousEpisode,
-    playNextEpisode,
+    playNextEpisode
   };
 };

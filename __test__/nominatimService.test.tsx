@@ -10,18 +10,18 @@ describe('getCountryFromNominativeService', () => {
   it('should return country code and country', async () => {
     const mockFetch = jest.fn().mockResolvedValue({
       ok: true,
-      json: jest.fn().mockResolvedValue(mockedNominatimResponse),
+      json: jest.fn().mockResolvedValue(mockedNominatimResponse)
     });
 
     global.fetch = mockFetch;
 
     const result = await getUserCountry({
       lat: '45',
-      lng: '45',
+      lng: '45'
     });
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&lat=45&lon=45',
+      'https://nominatim.openstreetmap.org/reverse?format=json&accept-language=en&lat=45&lon=45'
     );
 
     expect(result).toEqual({ country: 'Russia', country_code: 'ru' });

@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Search from './Home/HomePage';
 import Detail from './Detail/DetailPage';
@@ -15,7 +16,7 @@ function App(): JSX.Element {
           <Router>
             <PlayerBar />
             <div className="containerApp">
-              <section className="md:max-w-custom px-2 md:px-0 mx-w-full flex-grow">
+              <section className="max-w-full grow px-2 md:max-w-custom md:px-0">
                 <MainSearchBar />
                 <Routes>
                   <Route path="/detail/:id" element={<Detail />} />

@@ -26,41 +26,30 @@ export const SubSearchBar: React.FC<SubSearchBarProps> = ({
   isActiveSearch,
   setIsActiveSearch,
   options,
-  podcast,
+  podcast
 }) => {
   const toggleActiveSearch = () => {
     setIsActiveSearch((prevState: any) => !prevState);
   };
 
-  const { isPlaying, togglePlay, activePodcast, selectPodcast, isPlayLoading } =
-    usePlayerContext();
+  const { isPlaying, togglePlay, activePodcast, selectPodcast, isPlayLoading } = usePlayerContext();
 
   return (
     <div id="SubSearchBar" className={styles.SubSearchBar}>
-      <div
-        className={`${styles.containerSearch} ${podcast ? 'flex-grow' : ''}`}
-      >
+      <div className={`${styles.containerSearch} ${podcast ? 'grow' : ''}`}>
         {podcast && (
           <div className={`${styles.podcastTitle} pt-2`}>
             {isPlaying && activePodcast?.id === podcast.id ? (
-              <Button
-                className={styles.buttonHead}
-                onClick={() => togglePlay()}
-                disabled={isPlayLoading}
-              >
+              <Button className={styles.buttonHead} onClick={() => togglePlay()} disabled={isPlayLoading}>
                 <Pause />
               </Button>
             ) : (
-              <Button
-                className={styles.buttonHead}
-                onClick={() => selectPodcast(podcast.id)}
-                disabled={isPlayLoading}
-              >
+              <Button className={styles.buttonHead} onClick={() => selectPodcast(podcast.id)} disabled={isPlayLoading}>
                 <Play />
               </Button>
             )}
             <h1>{podcast.title}</h1>
-            <div className="w-[20px] h-[20px]">
+            <div className="h-[20px] w-[20px]">
               <Verified />
             </div>
           </div>
@@ -72,7 +61,7 @@ export const SubSearchBar: React.FC<SubSearchBarProps> = ({
               placeholder="search in results"
               onChange={(e) => setFilterValue(e.target.value)}
               labelProps={{
-                className: 'labelInput',
+                className: 'labelInput'
               }}
               name="filterTable"
               crossOrigin=""
@@ -81,6 +70,8 @@ export const SubSearchBar: React.FC<SubSearchBarProps> = ({
           )}
 
           <div
+            role="button"
+            tabIndex={0}
             onClick={() => {
               toggleActiveSearch();
             }}
@@ -96,7 +87,7 @@ export const SubSearchBar: React.FC<SubSearchBarProps> = ({
           className={`${styles.selectOrder} placeholderGray`}
           label="Order by"
           labelProps={{
-            className: 'labelInput',
+            className: 'labelInput'
           }}
         >
           {options.map((option) => (

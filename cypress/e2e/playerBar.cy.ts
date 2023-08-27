@@ -12,7 +12,8 @@ describe('PlayerBar tests', () => {
     cy.get('[data-cy^=play-]', { timeout: 20000 }).should('be.visible');
     cy.get('[data-cy^=play-]').eq(1).click();
     cy.get('[data-cy=btn-next]').should('be.disabled');
-    cy.get('[data-cy=btn-play]', { timeout: 20000 }).should('be.enabled');
+    cy.wait(5000);
+    cy.get('[data-cy=btn-play]').should('be.enabled');
   });
 
   it('should have next button enabled when shuffle is active', () => {

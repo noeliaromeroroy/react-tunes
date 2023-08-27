@@ -1,16 +1,13 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Button, Spinner } from '@material-tailwind/react';
 
 import { usePlayerContext } from '../../contexts/PlayerContext';
 import { SubSearchBar } from '../../components/SubSearchBar';
 import { HomeTable } from '../../components/HomeTable';
 import { IPodcast } from '../../../domain/models/interfaces/iPodcast.types';
 import '../../../assets/styles/index.css';
-import { Button, Spinner } from '@material-tailwind/react';
 import CardPodcast from '../../components/CardPodcast';
-import {
-  useFeaturedPodcasts,
-  useFilteredAndSortedPodcasts,
-} from '../../hooks/usePodcast';
+import { useFeaturedPodcasts, useFilteredAndSortedPodcasts } from '../../hooks/usePodcast';
 import { searchPodcasts } from '../../../infrastructure/services/ITunesPodcastService';
 
 import { useSearchLogic } from '../../hooks/useSearchLogic';
@@ -18,15 +15,8 @@ import { useSearchLogic } from '../../hooks/useSearchLogic';
 import styles from './HomePage.module.css';
 
 function Home(): JSX.Element {
-  const {
-    results,
-    filteredResults,
-    setFilteredResults,
-    featuredPodcast,
-    country,
-    searchTerm,
-    setResults,
-  } = usePlayerContext();
+  const { results, filteredResults, setFilteredResults, featuredPodcast, country, searchTerm, setResults } =
+    usePlayerContext();
 
   const { isLoading } = useFeaturedPodcasts();
 
@@ -34,13 +24,7 @@ function Home(): JSX.Element {
   const [filterValue, setFilterValue] = useState('');
   const [isActiveSearch, setIsActiveSearch] = useState(false);
 
-  useFilteredAndSortedPodcasts(
-    results,
-    orderBy,
-    filterValue,
-    isActiveSearch,
-    setFilteredResults,
-  );
+  useFilteredAndSortedPodcasts(results, orderBy, filterValue, isActiveSearch, setFilteredResults);
 
   const { loadMore } = useSearchLogic();
 
@@ -68,30 +52,36 @@ function Home(): JSX.Element {
             options={[
               { value: 'title', label: 'Title' },
               { value: 'author', label: 'Author' },
-              { value: 'date', label: 'Date' },
+              { value: 'date', label: 'Date' }
             ]}
           />
           <HomeTable podcasts={filteredResults} />
-          <Button onClick={() => loadMore()}>Load More</Button>
+          <Button data-cy="search-load-more" onClick={() => loadMore()}>
+            Load More
+          </Button>
+        </div>
+      ) : isLoading ? (
+        <div className={styles.loader}>
+          <Spinner className={styles.spinner} color="indigo" />
         </div>
       ) : (
-        <>
-          {isLoading ? (
-            <div className={styles.loader}>
-              <Spinner className={styles.spinner} color="indigo" />
-            </div>
-          ) : (
-            <div>
-              <h1>The latest podcasts on {country}</h1>
-              <div className={styles.featuredPodcast}>
-                {featuredPodcast &&
-                  featuredPodcast.map((podcast: IPodcast) => {
-                    return <CardPodcast {...podcast} key={podcast.id} />;
-                  })}
-              </div>
-            </div>
-          )}
-        </>
+        <div>
+          <h1>The latest podcasts on {country}</h1>
+          <div className={styles.featuredPodcast}>
+            {featuredPodcast &&
+              featuredPodcast.map((podcast: IPodcast) => {
+                return (
+                  <CardPodcast
+                    author={podcast.author}
+                    id={podcast.id}
+                    title={podcast.title}
+                    coverImageUrl={podcast.coverImageUrl}
+                    key={podcast.id}
+                  />
+                );
+              })}
+          </div>
+        </div>
       )}
     </div>
   );

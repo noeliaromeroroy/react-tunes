@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-} from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 import { PlayerContextType } from '../interfaces/iContexts';
 import { IPodcast } from '../../domain/models/interfaces/iPodcast.types';
@@ -13,36 +7,36 @@ import { useAudioManager } from '../hooks/useAudio';
 
 const PlayerContext = createContext<PlayerContextType>({
   country: null,
-  setCountry: (value: React.SetStateAction<string | null>) => null,
+  setCountry: () => null,
   featuredPodcast: [],
-  setFeaturedPodcast: (value: React.SetStateAction<IPodcast[]>) => {},
+  setFeaturedPodcast: () => {},
   results: [],
-  setResults: (value: React.SetStateAction<IPodcast[]>) => {},
+  setResults: () => {},
   filteredResults: [],
-  setFilteredResults: (value: React.SetStateAction<IPodcast[]>) => {},
+  setFilteredResults: () => {},
   isHome: true,
-  setIsHome: (value: React.SetStateAction<boolean>) => true,
+  setIsHome: () => true,
   activePodcast: null,
-  setActivePodcast: (value: React.SetStateAction<IPodcast | null>) => null,
+  setActivePodcast: () => null,
   isPlaying: false,
-  setIsPlaying: (value: React.SetStateAction<boolean>) => false,
-  togglePlay: (podcast?: IPodcast) => {},
-  selectPodcast: (id: string) => Promise.resolve(),
-  selectEpisode: (podcast: IPodcast, episodeUrl: string) => Promise.resolve(),
+  setIsPlaying: () => false,
+  togglePlay: () => {},
+  selectPodcast: () => Promise.resolve(),
+  selectEpisode: () => Promise.resolve(),
   audio: null,
-  setCurrentAudio: (newAudio: string) => {},
+  setCurrentAudio: () => {},
   activeEpisodeIndex: 0,
-  setActiveEpisodeIndex: (episodeIndex: number) => null,
+  setActiveEpisodeIndex: () => null,
   previousEpisode: null,
-  setPreviousEpisode: (value: React.SetStateAction<string | null>) => true,
+  setPreviousEpisode: () => true,
   nextEpisode: null,
-  setNextEpisode: (value: React.SetStateAction<string | null>) => true,
+  setNextEpisode: () => true,
   isPlayLoading: false,
-  setIsPlayLoading: (value: React.SetStateAction<boolean>) => false,
+  setIsPlayLoading: () => false,
   isSearching: false,
-  setIsSearching: (value: React.SetStateAction<boolean>) => false,
+  setIsSearching: () => false,
   searchTerm: null,
-  setSearchTerm: (value: React.SetStateAction<string | null>) => null,
+  setSearchTerm: () => null
 });
 
 export const usePlayerContext = (): PlayerContextType => {
@@ -77,7 +71,7 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
     audioRef,
     togglePlay,
     selectPodcast,
-    selectEpisode,
+    selectEpisode
   } = useAudioManager();
 
   const setCurrentAudio = (newAudio: string) => {
@@ -92,43 +86,39 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
     setIsPlaying(true);
   };
 
-  return (
-    <PlayerContext.Provider
-      value={{
-        results,
-        setResults,
-        featuredPodcast,
-        setFeaturedPodcast,
-        country,
-        setCountry,
-        isHome,
-        setIsHome,
-        filteredResults,
-        setFilteredResults,
-        activePodcast,
-        setActivePodcast,
-        isPlaying,
-        setIsPlaying,
-        togglePlay,
-        selectPodcast,
-        selectEpisode,
-        audio: audioRef.current,
-        setCurrentAudio,
-        activeEpisodeIndex,
-        setActiveEpisodeIndex,
-        previousEpisode,
-        setPreviousEpisode,
-        nextEpisode,
-        setNextEpisode,
-        isPlayLoading,
-        setIsPlayLoading,
-        isSearching,
-        setIsSearching,
-        searchTerm,
-        setSearchTerm,
-      }}
-    >
-      {children}
-    </PlayerContext.Provider>
-  );
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
+  const props = {
+    results,
+    setResults,
+    featuredPodcast,
+    setFeaturedPodcast,
+    country,
+    setCountry,
+    isHome,
+    setIsHome,
+    filteredResults,
+    setFilteredResults,
+    activePodcast,
+    setActivePodcast,
+    isPlaying,
+    setIsPlaying,
+    togglePlay,
+    selectPodcast,
+    selectEpisode,
+    audio: audioRef.current,
+    setCurrentAudio,
+    activeEpisodeIndex,
+    setActiveEpisodeIndex,
+    previousEpisode,
+    setPreviousEpisode,
+    nextEpisode,
+    setNextEpisode,
+    isPlayLoading,
+    setIsPlayLoading,
+    isSearching,
+    setIsSearching,
+    searchTerm,
+    setSearchTerm
+  };
+  return <PlayerContext.Provider value={props}>{children}</PlayerContext.Provider>;
 };
