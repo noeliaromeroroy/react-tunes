@@ -61,7 +61,7 @@ describe('Navigation tests', () => {
     cy.get('[data-cy=play-icon]').should('be.visible');
   });
 
-  it('should type "tech" and select the first podcast. Show the detail, then return to the homepage', () => {
+  it('should type "tech" and select the first podcast. Show the detail, then return to the search page. And return to homepage.', () => {
     cy.visit('http://localhost:9000/');
     cy.get('[data-cy^=search-podcast]', { timeout: 20000 }).type('tech{enter}');
     cy.get('[data-cy^=title-podcast-]', { timeout: 20000 }).should(
@@ -69,11 +69,16 @@ describe('Navigation tests', () => {
     );
     cy.get('[data-cy^=title-podcast-]').first().click();
     cy.get('[data-cy^=detail-]', { timeout: 20000 }).should('be.visible');
-    cy.get('[data-cy^=back-to-home]').click();
+    cy.get('[data-cy^=back]').click();
+    cy.url().should('eq', 'http://localhost:9000/search/tech');
+    cy.get('[data-cy^=title-podcast-]', { timeout: 20000 }).should(
+      'be.visible',
+    );
+    cy.get('[data-cy^=back]').click();
     cy.url().should('eq', 'http://localhost:9000/');
   });
 
-  it('should type "tech" and select the first podcast. Show the detail, then type "react" and get back to homepage', () => {
+  it('should type "tech" and select the first podcast. Show the detail, then type "react" and get back to search.', () => {
     cy.visit('http://localhost:9000/');
     cy.get('[data-cy^=search-podcast]', { timeout: 20000 }).type('tech{enter}');
     cy.get('[data-cy^=title-podcast-]', { timeout: 20000 }).should(
@@ -84,7 +89,7 @@ describe('Navigation tests', () => {
     cy.get('[data-cy^=search-podcast]', { timeout: 20000 })
       .clear()
       .type('react{enter}');
-    cy.url().should('eq', 'http://localhost:9000/');
+    cy.url().should('eq', 'http://localhost:9000/search/react');
     cy.get('[data-cy^=title-podcast-]', { timeout: 20000 }).should(
       'be.visible',
     );

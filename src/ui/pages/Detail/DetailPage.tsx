@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { usePlayerContext } from '../../contexts/PlayerContext';
+
 import { SubSearchBar } from '../../components/SubSearchBar';
 import { DetailTable } from '../../components/DetailTable';
 import styles from './DetailPage.module.css';
@@ -17,12 +18,18 @@ function Detail(): JSX.Element {
 
   const detailedPodcast = usePodcastDetails(id);
 
+  const { setIsHome } = usePlayerContext();
+
   const filteredDetailResults = useFilteredAndSortedEpisodes(
     detailedPodcast?.episodes,
     orderBy,
     filterValue,
     isActiveSearch
   );
+
+  useEffect(() => {
+    setIsHome(false);
+  }, []);
 
   return (
     <div className={styles.DetailedPage} id="DetailedPage">

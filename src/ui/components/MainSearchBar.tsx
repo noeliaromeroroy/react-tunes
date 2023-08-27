@@ -10,32 +10,25 @@ import Back from '../../assets/svg/back-icon.svg';
 export const MainSearchBar: React.FC = () => {
   const navigate = useNavigate();
 
-  const { results, isHome, setSearchTerm } = usePlayerContext();
+  const { isHome } = usePlayerContext();
 
   const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       const term = (event.target as HTMLInputElement).value;
-      setSearchTerm(term);
+      navigate(`/search/${term}`);
     }
   };
 
   return (
     <div className={styles.MainSearchBar}>
-      {!isHome ? (
-        <div data-cy="back-to-home">
-          <NavLink to="/">
+      {!isHome && (
+        <div data-cy="back">
+          <NavLink to="/" onClick={() => navigate(-1)}>
             <Back />
           </NavLink>
         </div>
-      ) : (
-        results.length > 0 && (
-          <div data-cy="back-to-home">
-            <NavLink to="/" onClick={() => navigate(0)}>
-              <Back />
-            </NavLink>
-          </div>
-        )
       )}
+
       <Input
         className={`${styles.input}`}
         data-cy="search-podcast"

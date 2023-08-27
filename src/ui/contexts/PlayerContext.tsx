@@ -32,11 +32,7 @@ const PlayerContext = createContext<PlayerContextType>({
   nextEpisode: null,
   setNextEpisode: () => true,
   isPlayLoading: false,
-  setIsPlayLoading: () => false,
-  isSearching: false,
-  setIsSearching: () => false,
-  searchTerm: null,
-  setSearchTerm: () => null
+  setIsPlayLoading: () => false
 });
 
 export const usePlayerContext = (): PlayerContextType => {
@@ -54,8 +50,6 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   const [isHome, setIsHome] = useState<boolean>(true);
   const [previousEpisode, setPreviousEpisode] = useState<string | null>(null);
   const [nextEpisode, setNextEpisode] = useState<string | null>(null);
-  const [isSearching, setIsSearching] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState<string | null>('');
 
   const [country, setCountry] = useState<string | null>('the world');
 
@@ -114,11 +108,7 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
     nextEpisode,
     setNextEpisode,
     isPlayLoading,
-    setIsPlayLoading,
-    isSearching,
-    setIsSearching,
-    searchTerm,
-    setSearchTerm
+    setIsPlayLoading
   };
   return <PlayerContext.Provider value={props}>{children}</PlayerContext.Provider>;
 };

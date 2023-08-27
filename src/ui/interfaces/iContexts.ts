@@ -55,10 +55,6 @@ export interface PlayerContextType {
   setNextEpisode: (episodeUrl: string | null) => void;
   isPlayLoading: boolean;
   setIsPlayLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  isSearching: boolean;
-  setIsSearching: React.Dispatch<React.SetStateAction<boolean>>;
-  searchTerm: string | null;
-  setSearchTerm: (searchTerm: string | null) => void;
 }
 
 export interface CacheContextType {

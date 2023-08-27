@@ -83,6 +83,7 @@ export const useFilteredAndSortedPodcasts = (
   setFilteredResults: (results: IPodcast[]) => void
 ) => {
   const { handleError } = useErrorHandler();
+
   useEffect(() => {
     try {
       let filter = filterValue;

@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { searchPodcasts } from '../../infrastructure/services/ITunesPodcastService';
 import { usePlayerContext } from '../contexts/PlayerContext';
 import { useErrorHandler } from './useError';
 import { CustomError, ErrorTypes } from '../interfaces/iContexts';
 
-export const useSearchLogic = () => {
-  const { setResults, setFilteredResults, searchTerm } = usePlayerContext();
+export const useSearchLogic = (term: string | undefined) => {
+  const { setResults, setFilteredResults } = usePlayerContext();
 
   const [page, setPage] = useState(1);
 
@@ -13,7 +13,7 @@ export const useSearchLogic = () => {
 
   const loadMore = async () => {
     try {
-      const podcasts = await searchPodcasts(searchTerm, 10, page);
+      const podcasts = await searchPodcasts(term, 10, page);
       setFilteredResults((prevItems) => [...prevItems, ...podcasts]);
       setResults((prevItems) => [...prevItems, ...podcasts]);
       setPage((prevPage) => prevPage + 1);
@@ -25,17 +25,6 @@ export const useSearchLogic = () => {
       handleError(playErr);
     }
   };
-
-  useEffect(() => {
-    const callSearch = async () => {
-      if (searchTerm) {
-        const podcasts = await searchPodcasts(searchTerm, 10, 0);
-        setFilteredResults(podcasts);
-        setResults(podcasts);
-      }
-    };
-    callSearch();
-  }, [searchTerm]);
 
   return { loadMore };
 };

@@ -1,66 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Spinner } from '@material-tailwind/react';
+import React from 'react';
+import { Spinner } from '@material-tailwind/react';
 
 import { usePlayerContext } from '../../contexts/PlayerContext';
-import { SubSearchBar } from '../../components/SubSearchBar';
-import { HomeTable } from '../../components/HomeTable';
 import { IPodcast } from '../../../domain/models/interfaces/iPodcast.types';
 import '../../../assets/styles/index.css';
 import CardPodcast from '../../components/CardPodcast';
-import { useFeaturedPodcasts, useFilteredAndSortedPodcasts } from '../../hooks/usePodcast';
-import { searchPodcasts } from '../../../infrastructure/services/ITunesPodcastService';
-
-import { useSearchLogic } from '../../hooks/useSearchLogic';
+import { useFeaturedPodcasts } from '../../hooks/usePodcast';
 
 import styles from './HomePage.module.css';
 
 function Home(): JSX.Element {
-  const { results, filteredResults, setFilteredResults, featuredPodcast, country, searchTerm, setResults } =
-    usePlayerContext();
+  const { featuredPodcast, country } = usePlayerContext();
 
   const { isLoading } = useFeaturedPodcasts();
 
-  const [orderBy, setOrderBy] = useState('');
-  const [filterValue, setFilterValue] = useState('');
-  const [isActiveSearch, setIsActiveSearch] = useState(false);
-
-  useFilteredAndSortedPodcasts(results, orderBy, filterValue, isActiveSearch, setFilteredResults);
-
-  const { loadMore } = useSearchLogic();
-
-  useEffect(() => {
-    const callSearch = async () => {
-      if (searchTerm) {
-        const podcasts = await searchPodcasts(searchTerm, 10, 0);
-        setFilteredResults(podcasts);
-        setResults(podcasts);
-      }
-    };
-    callSearch();
-  }, [searchTerm]);
-
   return (
     <div id="HomePage">
-      {filteredResults.length > 0 ? (
-        <div className="pb-[200px]">
-          <SubSearchBar
-            orderBy={orderBy}
-            setOrderBy={setOrderBy}
-            setFilterValue={setFilterValue}
-            isActiveSearch={isActiveSearch}
-            setIsActiveSearch={setIsActiveSearch}
-            options={[
-              { value: 'title', label: 'Title' },
-              { value: 'author', label: 'Author' },
-              { value: 'date', label: 'Date' }
-            ]}
-          />
-          <HomeTable podcasts={filteredResults} />
-          <Button data-cy="search-load-more" onClick={() => loadMore()}>
-            Load More
-          </Button>
-        </div>
-      ) : isLoading ? (
+      {isLoading ? (
         <div className={styles.loader}>
           <Spinner className={styles.spinner} color="indigo" />
         </div>

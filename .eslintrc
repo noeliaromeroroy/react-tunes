@@ -18,10 +18,6 @@
         "import/prefer-default-export": "off",
         "no-nested-ternary": "off"
       }
-    },
-    {
-      "files": ["**/*.js"],
-      "extends": ["airbnb-base"]
     }
   ]
 }
