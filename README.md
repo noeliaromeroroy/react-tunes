@@ -25,7 +25,7 @@ Puedes ver una demo de la aplicación haciendo clic 👉🏻[**aquí**](http://r
 - [**Nominatim Open-source geocoding**](https://nominatim.org/) Utilizada para obtener localizaciones del mundo en base a la latitud y longitud del usuario.
 
 
-## Tecnologías y Librerías 👩🏻‍💻
+## Tecnologías y Librerías 👩🏻‍💻
 
 - [**React**](https://reactjs.org/): Librería de JavaScript para construir interfaces de usuario.
 - [**TypeScript**](https://www.typescriptlang.org/): Superset de JavaScript que añade tipado estático.
@@ -100,6 +100,14 @@ Tests:
     $ npm run start
 
 Esto iniciará el servidor de desarrollo y abrirá la aplicación en tu navegador predeterminado.
+
+
+### Proceso de build del proyecto
+
+    $ npm run build
+
+Esto generará los ficheros necesarios para la puesta en producción del proyecto.
+
 
 ## Sistema de caché 📑
 
