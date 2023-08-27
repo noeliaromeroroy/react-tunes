@@ -11,7 +11,7 @@ import { useErrorHandler } from './useError';
 export const useFeaturedPodcasts = () => {
   const [isLoading, setIsLoading] = useState(true);
 
-  const { setIsHome, featuredPodcast, setFeaturedPodcast, country, setCountry } = usePlayerContext();
+  const { featuredPodcast, setFeaturedPodcast, country, setCountry } = usePlayerContext();
 
   const { handleError } = useErrorHandler();
 
@@ -37,7 +37,6 @@ export const useFeaturedPodcasts = () => {
   };
 
   useEffect(() => {
-    setIsHome(true);
     const loadPodcasts = async () => {
       const coords = await getUserLocation().catch((err) => {
         const playErr: CustomError = {
@@ -62,22 +61,19 @@ export const useFeaturedPodcasts = () => {
     };
 
     if (featuredPodcast.length === 0) {
-      try {
-        loadPodcasts();
-      } catch (err: any) {
-        const playErr: CustomError = {
-          type: ErrorTypes.GET_PODCAST,
-          message: `An error occurred while trying to get the featured podcast list. Original error: ${err.message}`
-        };
-        handleError(playErr);
-      } finally {
-        setIsLoading(false);
-      }
+      loadPodcasts()
+        .catch((err: any) => {
+          const playErr: CustomError = {
+            type: ErrorTypes.GET_PODCAST,
+            message: `An error occurred while trying to get the featured podcast list. Original error: ${err.message}`
+          };
+          handleError(playErr);
+        })
+        .finally(() => setIsLoading(false));
     } else {
       setIsLoading(false);
     }
   }, []);
-
   return { isLoading, featuredPodcast, country };
 };
 

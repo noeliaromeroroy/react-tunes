@@ -19,13 +19,12 @@ function Search(): JSX.Element {
   const { term } = useParams();
 
   const [orderBy, setOrderBy] = useState('');
-  const [isLoading] = useState(false);
   const [filterValue, setFilterValue] = useState('');
   const [isActiveSearch, setIsActiveSearch] = useState(false);
 
   useFilteredAndSortedPodcasts(results, orderBy, filterValue, isActiveSearch, setFilteredResults);
 
-  const { loadMore, search } = useSearchLogic(term);
+  const { isLoading, loadMore, search } = useSearchLogic(term);
 
   useEffect(() => {
     search();
