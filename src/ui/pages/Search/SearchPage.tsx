@@ -7,7 +7,6 @@ import { SubSearchBar } from '../../components/SubSearchBar';
 import { HomeTable } from '../../components/HomeTable';
 import '../../../assets/styles/index.css';
 import { useFilteredAndSortedPodcasts } from '../../hooks/usePodcast';
-import { searchPodcasts } from '../../../infrastructure/services/ITunesPodcastService';
 import Confused from '../../../assets/svg/confused.svg';
 
 import { useSearchLogic } from '../../hooks/useSearchLogic';
@@ -15,7 +14,7 @@ import { useSearchLogic } from '../../hooks/useSearchLogic';
 import styles from './SearchPage.module.css';
 
 function Search(): JSX.Element {
-  const { results, filteredResults, setFilteredResults, setResults, setIsHome } = usePlayerContext();
+  const { results, filteredResults, setFilteredResults, setIsHome } = usePlayerContext();
 
   const { term } = useParams();
 
@@ -26,15 +25,10 @@ function Search(): JSX.Element {
 
   useFilteredAndSortedPodcasts(results, orderBy, filterValue, isActiveSearch, setFilteredResults);
 
-  const { loadMore } = useSearchLogic(term);
+  const { loadMore, search } = useSearchLogic(term);
 
   useEffect(() => {
-    const callSearch = async () => {
-      const podcasts = await searchPodcasts(term, 10, 0);
-      setFilteredResults(podcasts);
-      setResults(podcasts);
-    };
-    callSearch();
+    search();
     setIsHome(false);
   }, []);
 

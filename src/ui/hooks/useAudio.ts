@@ -44,13 +44,22 @@ export const useAudioManager = () => {
   };
 
   const togglePlay = (podcast?: IPodcast) => {
-    if (!activePodcast && podcast) selectPodcast(podcast.id);
-    setIsPlaying((prevIsPlaying) => !prevIsPlaying);
+    try {
+      if (!activePodcast && podcast) selectPodcast(podcast.id);
+      setIsPlaying((prevIsPlaying) => !prevIsPlaying);
+    } catch (err: any) {
+      const playErr: CustomError = {
+        type: ErrorTypes.PLAY_ERROR,
+        message: `An error occurred while trying to toggle the podcast. Original error: ${err.message}`
+      };
+      handleError(playErr);
+    }
   };
 
   const selectEpisode = async (podcast: IPodcast, episodeUrl: string) => {
-    setIsPlayLoading(true);
     try {
+      setIsPlayLoading(true);
+
       if (audioRef.current) {
         audioRef.current.pause();
       }
@@ -97,7 +106,11 @@ export const useAudioManager = () => {
         audioRef.current.pause();
       }
     };
-    play();
+    try {
+      play();
+    } catch (error) {
+      handleError(error);
+    }
   }, [isPlaying]);
 
   return {

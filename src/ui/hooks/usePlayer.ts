@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { usePlayerContext } from '../contexts/PlayerContext';
 import { formatTime } from '../helpers/dateHelper';
+import { useErrorHandler } from './useError';
 
 export const usePlayerControls = () => {
   const {
@@ -22,81 +23,104 @@ export const usePlayerControls = () => {
   const [volume, setVolume] = useState(20);
   const isDragging = useRef(false);
 
+  const { handleError } = useErrorHandler();
+
   const getRandomEpisodeIndex = (): number => {
-    let randomIndex = 0;
-    if (activePodcast) {
-      do {
-        randomIndex = Math.floor(Math.random() * activePodcast.episodes.length);
-      } while (randomIndex === activeEpisodeIndex);
-    } else {
-      randomIndex = 0;
+    try {
+      let randomIndex = 0;
+      if (activePodcast) {
+        do {
+          randomIndex = Math.floor(Math.random() * activePodcast.episodes.length);
+        } while (randomIndex === activeEpisodeIndex);
+      } else {
+        randomIndex = 0;
+      }
+      return randomIndex;
+    } catch (error) {
+      handleError(error);
+      return 0;
     }
-    return randomIndex;
   };
 
   const playPreviousEpisode = () => {
-    const index = activeEpisodeIndex;
-    if (activePodcast && audio && index + 1 <= activePodcast.episodes.length - 1) {
-      if (isRepeatActivated) {
-        setCurrentAudio(activePodcast.episodes[index].episodeUrl);
-      } else {
-        setNextEpisode(activePodcast.episodes[index].episodeUrl);
-        if (isShuffleActivated) {
-          const randomIndex = getRandomEpisodeIndex();
-          setCurrentAudio(activePodcast.episodes[randomIndex].episodeUrl);
-          setActiveEpisodeIndex(randomIndex);
+    try {
+      const index = activeEpisodeIndex;
+      if (activePodcast && audio && index + 1 <= activePodcast.episodes.length - 1) {
+        if (isRepeatActivated) {
+          setCurrentAudio(activePodcast.episodes[index].episodeUrl);
         } else {
-          if (index + 2 > activePodcast.episodes.length - 1) {
-            setPreviousEpisode(null);
+          setNextEpisode(activePodcast.episodes[index].episodeUrl);
+          if (isShuffleActivated) {
+            const randomIndex = getRandomEpisodeIndex();
+            setCurrentAudio(activePodcast.episodes[randomIndex].episodeUrl);
+            setActiveEpisodeIndex(randomIndex);
           } else {
-            setPreviousEpisode(activePodcast.episodes[index + 2].episodeUrl);
+            if (index + 2 > activePodcast.episodes.length - 1) {
+              setPreviousEpisode(null);
+            } else {
+              setPreviousEpisode(activePodcast.episodes[index + 2].episodeUrl);
+            }
+            setCurrentAudio(activePodcast.episodes[index + 1].episodeUrl);
+            setActiveEpisodeIndex(index + 1);
           }
-          setCurrentAudio(activePodcast.episodes[index + 1].episodeUrl);
-          setActiveEpisodeIndex(index + 1);
         }
       }
+    } catch (error) {
+      handleError(error);
     }
   };
 
   const playNextEpisode = () => {
-    const index = activeEpisodeIndex;
-    if (activePodcast && audio && (index - 1 >= 0 || isShuffleActivated || isRepeatActivated)) {
-      if (isRepeatActivated) {
-        setCurrentAudio(activePodcast.episodes[index].episodeUrl);
-      } else {
-        setPreviousEpisode(activePodcast.episodes[index].episodeUrl);
-        if (isShuffleActivated) {
-          const randomIndex = getRandomEpisodeIndex();
-          setCurrentAudio(activePodcast.episodes[randomIndex].episodeUrl);
-          setActiveEpisodeIndex(randomIndex);
+    try {
+      const index = activeEpisodeIndex;
+      if (activePodcast && audio && (index - 1 >= 0 || isShuffleActivated || isRepeatActivated)) {
+        if (isRepeatActivated) {
+          setCurrentAudio(activePodcast.episodes[index].episodeUrl);
         } else {
-          if (index - 2 < 0) {
-            setNextEpisode(null);
+          setPreviousEpisode(activePodcast.episodes[index].episodeUrl);
+          if (isShuffleActivated) {
+            const randomIndex = getRandomEpisodeIndex();
+            setCurrentAudio(activePodcast.episodes[randomIndex].episodeUrl);
+            setActiveEpisodeIndex(randomIndex);
           } else {
-            setNextEpisode(activePodcast.episodes[index - 2].episodeUrl);
+            if (index - 2 < 0) {
+              setNextEpisode(null);
+            } else {
+              setNextEpisode(activePodcast.episodes[index - 2].episodeUrl);
+            }
+            setActiveEpisodeIndex(index - 1);
+            setCurrentAudio(activePodcast.episodes[index - 1].episodeUrl);
           }
-          setActiveEpisodeIndex(index - 1);
-          setCurrentAudio(activePodcast.episodes[index - 1].episodeUrl);
         }
       }
+    } catch (error) {
+      handleError(error);
     }
   };
 
   const handleSliderChange = (e: any) => {
-    const percentage = parseFloat(e.target.value);
-    if (audio) {
-      const newTime = (percentage / 100) * audio.duration;
-      audio.currentTime = newTime;
-      setAudioProgress(percentage);
-      setCurrentTime(formatTime(newTime));
-      if (percentage === 100) setIsPlaying(false);
+    try {
+      const percentage = parseFloat(e.target.value);
+      if (audio) {
+        const newTime = (percentage / 100) * audio.duration;
+        audio.currentTime = newTime;
+        setAudioProgress(percentage);
+        setCurrentTime(formatTime(newTime));
+        if (percentage === 100) setIsPlaying(false);
+      }
+    } catch (error) {
+      handleError(error);
     }
   };
 
   const handleVolumeChange = (e: any) => {
-    if (audio) {
-      audio.volume = e.target.value / 100;
-      setVolume(audio.volume * 100);
+    try {
+      if (audio) {
+        audio.volume = e.target.value / 100;
+        setVolume(audio.volume * 100);
+      }
+    } catch (error) {
+      handleError(error);
     }
   };
 
@@ -105,37 +129,47 @@ export const usePlayerControls = () => {
   };
 
   const toggleShuffle = () => {
-    setIsShuffleActivated((prevValue) => !prevValue);
-    if (isShuffleActivated && activePodcast) {
-      setNextEpisode(activePodcast.episodes[getRandomEpisodeIndex()].episodeUrl);
+    try {
+      setIsShuffleActivated((prevValue) => !prevValue);
+      if (isShuffleActivated && activePodcast) {
+        setNextEpisode(activePodcast.episodes[getRandomEpisodeIndex()].episodeUrl);
+      }
+    } catch (error) {
+      handleError(error);
     }
   };
 
   useEffect(() => {
-    if (audio) {
-      const updateDuration = () => {
-        if (audio.duration) setDuration(formatTime(audio.duration));
-      };
+    try {
+      if (audio) {
+        const updateDuration = () => {
+          if (audio.duration) setDuration(formatTime(audio.duration));
+        };
 
-      const handleTimeUpdate = () => {
-        if (!isDragging.current) {
-          setCurrentTime(formatTime(audio.currentTime));
-          if (audio.currentTime > 0) {
-            setAudioProgress((audio.currentTime * 100) / audio.duration);
+        const handleTimeUpdate = () => {
+          if (!isDragging.current) {
+            setCurrentTime(formatTime(audio.currentTime));
+            if (audio.currentTime > 0) {
+              setAudioProgress((audio.currentTime * 100) / audio.duration);
+            }
           }
-        }
-      };
+        };
 
-      audio.addEventListener('loadedmetadata', updateDuration);
-      audio.addEventListener('timeupdate', handleTimeUpdate);
+        audio.addEventListener('loadedmetadata', updateDuration);
+        audio.addEventListener('timeupdate', handleTimeUpdate);
 
-      return () => {
-        audio.removeEventListener('timeupdate', handleTimeUpdate);
-        audio.removeEventListener('loadedmetadata', updateDuration);
-      };
+        return () => {
+          audio.removeEventListener('timeupdate', handleTimeUpdate);
+          audio.removeEventListener('loadedmetadata', updateDuration);
+        };
+      }
+      // eslint-disable-next-line prettier/prettier
+      return () => { };
+    } catch (error) {
+      handleError(error);
+      // eslint-disable-next-line prettier/prettier
+      return () => { };
     }
-    // eslint-disable-next-line prettier/prettier
-    return () => { };
   }, [audio]);
 
   return {

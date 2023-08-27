@@ -26,5 +26,14 @@ export const useSearchLogic = (term: string | undefined) => {
     }
   };
 
-  return { loadMore };
+  const search = async () => {
+    const callSearch = async () => {
+      const podcasts = await searchPodcasts(term, 10, 0);
+      setFilteredResults(podcasts);
+      setResults(podcasts);
+    };
+    callSearch();
+  };
+
+  return { loadMore, search };
 };

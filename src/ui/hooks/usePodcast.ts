@@ -39,21 +39,31 @@ export const useFeaturedPodcasts = () => {
   useEffect(() => {
     setIsHome(true);
     const loadPodcasts = async () => {
-      try {
-        const coords = await getUserLocation();
-        let podcastsByLocation: IPodcast[] = [];
+      const coords = await getUserLocation().catch((err) => {
+        const playErr: CustomError = {
+          type: ErrorTypes.LOCATION_ERROR,
+          message: `An error occurred while trying to get the user location. Original error: ${err.message}`
+        };
+        handleError(playErr);
+      });
+      let podcastsByLocation: IPodcast[] = [];
 
-        if (coords) {
-          const location = await getUserCountry(coords);
-          if (location) {
-            podcastsByLocation = await getFeaturedPodcast(location.country_code);
-            setCountry(location.country);
-          }
-        } else {
-          podcastsByLocation = await getFeaturedPodcast();
+      if (coords) {
+        const location = await getUserCountry(coords);
+        if (location) {
+          podcastsByLocation = await getFeaturedPodcast(location.country_code);
+          setCountry(location.country);
         }
+      } else {
+        podcastsByLocation = await getFeaturedPodcast();
+      }
 
-        setFeaturedPodcast(podcastsByLocation);
+      setFeaturedPodcast(podcastsByLocation);
+    };
+
+    if (featuredPodcast.length === 0) {
+      try {
+        loadPodcasts();
       } catch (err: any) {
         const playErr: CustomError = {
           type: ErrorTypes.GET_PODCAST,
@@ -63,10 +73,6 @@ export const useFeaturedPodcasts = () => {
       } finally {
         setIsLoading(false);
       }
-    };
-
-    if (featuredPodcast.length === 0) {
-      loadPodcasts();
     } else {
       setIsLoading(false);
     }
@@ -123,15 +129,20 @@ export const usePodcastDetails = (id: string | undefined): IPodcast | null => {
   const [detailedPodcast, setDetailedPodcast] = useState<IPodcast | null>(null);
 
   const { setCache, getCache } = useCache();
+  const { handleError } = useErrorHandler();
 
   useEffect(() => {
-    const getEpisodes = async (podcastId: string) => {
-      const podcast = await getPodcastDetail(podcastId, setCache, getCache);
-      setDetailedPodcast(podcast);
-    };
+    try {
+      const getEpisodes = async (podcastId: string) => {
+        const podcast = await getPodcastDetail(podcastId, setCache, getCache);
+        setDetailedPodcast(podcast);
+      };
 
-    if (id) {
-      getEpisodes(id);
+      if (id) {
+        getEpisodes(id);
+      }
+    } catch (error) {
+      handleError(error);
     }
   }, [id]);
 

@@ -6,7 +6,8 @@ export enum ErrorTypes {
   LOCATION_ERROR = 'LOCATION_ERROR',
   GET_PODCAST = 'GET_PODCAST',
   FILTER_PODCAST = 'FILTER_PODCAST',
-  SEARCH_PODCAST = 'SEARCH_PODCAST'
+  SEARCH_PODCAST = 'SEARCH_PODCAST',
+  SORT_PODCAST = 'SORT_PODCAST'
 }
 
 export const ErrorTitles: { [key in ErrorTypes]: string } = {
@@ -14,7 +15,8 @@ export const ErrorTitles: { [key in ErrorTypes]: string } = {
   LOCATION_ERROR: 'Error getting location',
   GET_PODCAST: 'Error getting podcast',
   FILTER_PODCAST: 'Error filtering podcast',
-  SEARCH_PODCAST: 'Error searching podcast'
+  SEARCH_PODCAST: 'Error searching podcast',
+  SORT_PODCAST: 'Error sorting podcast'
 };
 
 export interface CustomError {
