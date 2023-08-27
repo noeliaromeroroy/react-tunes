@@ -5,11 +5,11 @@ React Tunes es una aplicación web que permite a los usuarios buscar y reproduci
 ![Image Demo React Tunes 01](https://react-tunes.s3.eu-west-3.amazonaws.com/demoimages/demo-react-tunes-01.png)
 ![Image Demo React Tunes 02](https://react-tunes.s3.eu-west-3.amazonaws.com/demoimages/demo-react-tunes-02.png)
 
-## Demo
+## Demo 🧐
 
 Puedes ver una demo de la aplicación haciendo clic 👉🏻[**aquí**](http://react-tunes.s3-website.eu-west-3.amazonaws.com/).
 
-## Features
+## Features 🔝
 
 🚀 **Rápido & Fluido:** Construido con React, ReactTunes ofrece una experiencia ágil y responsive. ¡Navega por los podcasts con facilidad!
 
@@ -19,7 +19,13 @@ Puedes ver una demo de la aplicación haciendo clic 👉🏻[**aquí**](http://r
 
 🔍 **Búsqueda Potente:** Encuentra rápidamente los podcasts que más te gusta con su eficiente función de búsqueda. ¡Descubrir nuevo contenido nunca ha sido tan fácil!
 
-## Tecnologías y Librerías
+## APIs utilizadas 🔗
+
+- [**iTunes Search API**](https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html#//apple_ref/doc/uid/TP40017632-CH5-SW1) Utilizada para buscar y obtener detalles de podcasts.
+- [**Nominatim Open-source geocoding**](https://nominatim.org/) Utilizada para obtener localizaciones del mundo en base a la latitud y longitud del usuario.
+
+
+## Tecnologías y Librerías 👩🏻‍💻
 
 - [**React**](https://reactjs.org/): Librería de JavaScript para construir interfaces de usuario.
 - [**TypeScript**](https://www.typescriptlang.org/): Superset de JavaScript que añade tipado estático.
@@ -29,6 +35,7 @@ Puedes ver una demo de la aplicación haciendo clic 👉🏻[**aquí**](http://r
 - [**Material Tailwind**](https://www.material-tailwind.com/): Componentes React para Material Tailwind.
 - [**React Router DOM**](https://reactrouter.com/en/main): Enrutamiento y navegación para aplicaciones React.
 - [**Jest**](https://jestjs.io/) y [**Cypress**](https://www.cypress.io/): Herramientas de testing para pruebas unitarias y end-to-end respectivamente.
+- [**Husky**](https://www.npmjs.com/package/husky): Herramienta que nos permite ejecutar Git Hooks de forma más amigable y sencilla. 
 - [**ESLint**](https://eslint.org/) y [**Prettier**](https://prettier.io/): Herramientas para asegurar la calidad y consistencia del código.
 
 ### ¿Por qué Material UI?
@@ -47,8 +54,37 @@ Esta biblioteca combina la filosofía y diseño de Material Design con la flexib
 
 - **Experiencia Previa y Estabilidad**: La familiaridad previa con Material Tailwind y su estabilidad y compatibilidad con las tecnologías actuales fueron factores decisivos en la elección de esta biblioteca para el proyecto.
 
+## Arquitectura 🏗️
 
-## Cómo empezar
+Este proyecto ha sido diseñado y desarrollado siguiendo la arquitectura hexagonal (también conocida como "Ports and Adapters") combinada con principios de Diseño Guiado por el Dominio (DDD). A continuación, se detalla la estructura y organización del proyecto basándose en esta arquitectura.
+
+### Arquitectura Hexagonal y DDD
+La arquitectura hexagonal busca separar la lógica de negocio de las preocupaciones externas, permitiendo que una aplicación sea agnóstica respecto a los detalles de entrada/salida, bases de datos, frameworks web, etc. Por otro lado, DDD se centra en modelar la lógica de negocio basándose en el dominio del problema, promoviendo una estructura de código que refleje el dominio real.
+
+#### Estructura del Proyecto
+1. **Dominio (Core Business Logic):**
+
+  - ./src/domain: Contiene la lógica de negocio principal del proyecto.
+  - ./src/domain/models/interfaces: Interfaces para los modelos de dominio, definiendo contratos claros para la lógica de negocio.
+
+2. **Infraestructura (Adapters):**
+
+  - ./src/infrastructure: Alberga implementaciones concretas de interfaces definidas en el dominio, como repositorios o servicios de terceros.
+  - ./src/infrastructure/services: Servicios específicos de infraestructura que interactúan con sistemas externos.
+
+3. **UI (Adapters):**
+
+  - ./src/ui: Se encarga de todo lo relacionado con la interfaz de usuario, actuando como un adaptador en la arquitectura hexagonal.
+  - ./src/ui/contexts, ./src/ui/components, ./src/ui/hooks, ./src/ui/pages: Representan una organización basada en componentes y características de la UI. Los hooks, en particular, encapsulan comportamientos reutilizables específicos de la UI.
+
+4. **Assets:**
+
+  - ./src/assets: Contiene recursos estáticos como imágenes y estilos, esenciales para la presentación y estética de la aplicación.
+Tests:
+
+  - ./\_\_mocks\_\_, ./\_\_test\_\_, ./cypress: El proyecto tiene pruebas unitarias y de extremo a extremo (E2E), asegurando la calidad y funcionalidad del código.
+
+## Cómo empezar 🚀
 
 ### Clonar el repositorio:
 
@@ -59,27 +95,59 @@ Esta biblioteca combina la filosofía y diseño de Material Design con la flexib
 
     $ npm install
 
-## Ejecutar el proyecto:
+### Ejecutar el proyecto
 
     $ npm run start
 
 Esto iniciará el servidor de desarrollo y abrirá la aplicación en tu navegador predeterminado.
 
+## Sistema de caché 📑
 
-## APIs utilizadas
+He implementado un sistema de caché en el proyecto para mejorar la eficiencia al obtener detalles de podcasts.
 
-- [**iTunes Search API**](https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html#//apple_ref/doc/uid/TP40017632-CH5-SW1) Utilizada para buscar y obtener detalles de podcasts.
+### ¿Cómo funciona?
 
-## Pruebas (Tests)
+1. **Primera vez que solicitas un podcast:** Cuando pides información sobre un podcast por primera vez, el sistema la busca en la API de iTunes y la muestra. Pero además, guarda una copia de esa información en una "memoria temporal" llamada caché.
+
+2. **Solicitudes posteriores:** Si vuelves a pedir información sobre ese mismo podcast dentro de una hora (60 minutos) después de la primera solicitud, el sistema no vuelve a buscar en la API de iTunes. En lugar de eso, te muestra la copia que guardó en la caché. Esto hace que la respuesta sea más rápida y reduce la carga en la API.
+
+Después de esos 60 minutos, la información en la caché se considera "antigua" y se descarta. Si vuelves a pedir detalles del podcast después de ese tiempo, el sistema buscará nuevamente en la API y actualizará la caché con la información más reciente.
+
+**Nota Importante:** Para que puedas observar cómo funciona este sistema en tiempo real, he añadido un registro (log) en el sistema. Cada vez que se muestra la información de un podcast, este log te indicará si la información proviene directamente de la API de iTunes o si se ha recuperado de la caché.
+
+## Paginación 📗
+Para mejorar la experiencia de usuario y optimizar la carga de datos, he implementado un sistema de paginación en la búsqueda de podcasts.
+
+¿Cómo funciona?
+
+- **Primera Búsqueda:** Cuando realizas una búsqueda inicial de podcasts, el sistema te mostrará los primeros 10 resultados. Esto permite que la página cargue rápidamente y te ofrezca una vista preliminar de los podcasts disponibles.
+
+- **Cargar Más:** Si deseas explorar más resultados, encontrarás un botón denominado "Cargar Más" al final de la lista. Al hacer clic en este botón, el sistema añadirá 10 podcasts adicionales a la lista. Puedes seguir haciendo clic en "Cargar Más" tantas veces como desees para seguir explorando más podcasts, y estos se irán añadiendo de 10 en 10.
+
+Este enfoque de paginación garantiza que no se sobrecargue la página con demasiados resultados a la vez, proporcionando una navegación más fluida y rápida para el usuario.
+
+## Control de Errores 🐛
+La robustez y estabilidad de una aplicación no solo dependen de sus características y funcionalidades, sino también de cómo maneja y responde ante situaciones inesperadas o errores. En este proyecto, he puesto un énfasis especial en el control de errores para garantizar una experiencia de usuario sin contratiempos.
+
+### Handler Especial y Personalizable
+
+He desarrollado un "handler" especial para errores que es personalizable. Esto significa que, en lugar de depender de soluciones genéricas, mi sistema tiene una herramienta diseñada específicamente para detectar y responder a errores de manera adecuada. Este handler evita errores en tiempo de ejecución (runtime) que podrían causar interrupciones inesperadas o comportamientos no deseados en la aplicación.
+
+### Extensión del Control de Errores
+He extendido el control de errores a toda la lógica de negocio del proyecto. Esto asegura que, desde la recuperación de datos hasta la presentación de información al usuario, cada paso tiene mecanismos para manejar situaciones inesperadas y garantizar que la aplicación continúe funcionando de manera óptima.
+
+Con este enfoque integral en el control de errores, busco ofrecer una aplicación más confiable y resistente, capaz de manejar cualquier eventualidad de manera elegante y eficiente.
+
+## Pruebas (Tests) 🚦
 En este proyecto, se ha dado prioridad a la calidad del código y a asegurar que las funcionalidades clave funcionen como se espera. Para ello, se han implementado tanto pruebas unitarias como pruebas E2E.
+
+Para ejecutar las pruebas, puedes usar el siguiente comando, con él se ejecutarán los test unitarios en primer lugar y posteriormente las pruebas E2E:
+
+    $ npm run test
 
 ### Pruebas Unitarias
 
 Las pruebas unitarias se han realizado utilizando Jest. Estas pruebas se centran en las funcionalidades esenciales relacionadas con la búsqueda de podcasts y la obtención de detalles de un podcast específico.
-
-Para ejecutar las pruebas unitarias, puedes usar el siguiente comando:
-
-    $ npm run test
 
 ### Pruebas E2E
 
@@ -87,28 +155,31 @@ Las pruebas E2E se han realizado utilizando Cypress. Estas pruebas simulan la in
 
 Estas pruebas garantizan que las funcionalidades clave de la aplicación, como la búsqueda, reproducción y navegación, funcionen correctamente en diferentes escenarios.
 
-Para ejecutar las pruebas E2E, puedes usar el siguiente comando:
 
-    $ npx cypress open
+## Integración de Husky en el proyecto 🐶
 
-## TODOS - Pendientes
+Husky es una herramienta que facilita la adición hooks al proceso de control de versiones con Git. Estos hooks permiten ejecutar scripts o comandos específicos en ciertos momentos del flujo de trabajo de Git, como antes de hacer un commit o antes de hacer push.
 
-Aunque el proyecto ha alcanzado un nivel funcional y estético satisfactorio, siempre hay espacio para mejorar y optimizar. Algunas de las mejoras que se podrían implementar en futuras versiones incluyen:
+### Beneficios de usar Husky 
 
-- **Diseño Pixel Perfect**: Aunque se ha trabajado estrechamente con el prototipo de Figma proporcionado, se podría refinar aún más la interfaz para asegurar una correspondencia pixel perfect con el diseño original. Esto garantizaría una fidelidad absoluta al diseño previsto y mejoraría la experiencia visual del usuario.
+- **Automatización:** Garantiza que ciertos procesos o verificaciones se realicen automáticamente antes de acciones críticas, como hacer commit o push.
 
-- **Identificación de Episodios en Reproducción**: Actualmente, aunque el usuario puede reproducir episodios desde la tabla, no hay una indicación visual clara de qué episodio está sonando en un momento dado. Sería útil implementar un indicador (como un icono o cambio de color) que señale el episodio que está en reproducción. Esto proporcionaría una referencia visual rápida para el usuario y mejoraría la navegación y experiencia general.
+- **Consistencia:** Asegura que todos los colaboradores del proyecto sigan las mismas reglas y estándares.
 
-- **Refactorización y Optimización de TailwindCSS:**
+- **Calidad del Código:** Al ejecutar pruebas y linters automáticamente, se mantiene una alta calidad del código y se evitan errores comunes.
 
-    - **Estructura de Tailwind**: Se busca mejorar la estructura actual de Tailwind en el proyecto, con el objetivo de tematizar más los componentes y asegurar una coherencia estilística en toda la aplicación.
-    - **Refactorización**: Es necesario revisar y, si es necesario, refactorizar ciertas partes del código para asegurar una implementación más limpia y eficiente de Tailwind.
-    - **Clases Inline**: Aunque se ha hecho un esfuerzo por mantener el código limpio, todavía hay algunas clases inline que se podrían trasladar a archivos de estilos o tematizar para mejorar la legibilidad y mantenibilidad del código.
+- **Prevención:** Puede prevenir que código defectuoso o no conforme a los estándares se añada al repositorio.
 
-- **Refactorización**: Aunque se ha tenido especial cuidado en mantener un código ordenado y escalable, siempre hay espacio para mejorar. Se podría considerar un refactor de algunos componentes para optimizar aún más la estructura del código y mejorar la mantenibilidad a largo plazo.
+### Detalles de los hooks
 
-- **Gestión de Errores**: Implementar una mejor gestión de errores y páginas específicas para mostrar errores al usuario.
+#### commit-msg
 
-- **Implementación de sistema de caché**: Me hubiera gustado implementar un sistema de caché para almacenar información de las búsquedas y optimizar el rendimiento. Reduciría así la necesidad de hacer peticiones repetidas al servidor o API, lo que a su vez podría mejorar el rendimiento y la experiencia del usuario.
+Antes de finalizar un commit, este hook se asegura de que el mensaje del commit siga un formato específico utilizando commitlint. Esto garantiza que todos los mensajes de commit en el proyecto sean consistentes y sigan un estándar definido.
 
-- **Paginación**: También se puede mejorar el rendimiento incluyendo paginación en los resultados de búsqueda. No lo vi realmente necesario en la primera versión ya que el API de iTunes, como máximo, devuelve 200 resultados y no hay posibilidad de solicitar resultados al API a partir de la posición 200 de sus resultados si queremos mostrar más allá del límite que ofrece.
+#### pre-commit
+
+Antes de hacer un commit, este hook ejecuta lint-staged, que corre linters en los archivos que han sido modificados y están listos para ser incluidos en el commit. Esto asegura que cualquier código que se vaya a incluir en el repositorio cumpla con los estándares de codificación del proyecto.
+
+#### pre-push
+
+Antes de hacer push (enviar los cambios al repositorio remoto), este hook ejecuta las pruebas del proyecto con npm run test. Esto garantiza que no se envíen al repositorio remoto cambios que rompan las funcionalidades existentes.
