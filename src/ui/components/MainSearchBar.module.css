@@ -8,3 +8,6 @@
 .input .peer:placeholder-shown {
   @apply !text-white/40 uppercase;
 }
+.tooltip {
+  @apply absolute top-[50px] bg-white/80 border-white text-black mr-2;
+}
