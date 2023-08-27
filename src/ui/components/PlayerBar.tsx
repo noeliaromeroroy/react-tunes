@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Avatar, Button, Slider } from '@material-tailwind/react';
+import { Avatar, Button, Slider, Spinner } from '@material-tailwind/react';
 
 import { usePlayerContext } from '../contexts/PlayerContext';
 import { usePlayerControls } from '../hooks/usePlayer';
@@ -72,7 +72,13 @@ const PlayerBar: React.FC = () => {
             onClick={() => togglePlay()}
             disabled={!activePodcast || isPlayLoading}
           >
-            {isPlaying && activePodcast ? <Pause data-cy="pause-icon" /> : <Play data-cy="play-icon" />}
+            {isPlayLoading ? (
+              <Spinner />
+            ) : isPlaying && activePodcast ? (
+              <Pause data-cy="pause-icon" />
+            ) : (
+              <Play data-cy="play-icon" />
+            )}
           </Button>
           <Button
             data-cy="btn-next"

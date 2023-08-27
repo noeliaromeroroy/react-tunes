@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Spinner } from '@material-tailwind/react';
 
 import { usePlayerContext } from '../../contexts/PlayerContext';
@@ -10,9 +10,13 @@ import { useFeaturedPodcasts } from '../../hooks/usePodcast';
 import styles from './HomePage.module.css';
 
 function Home(): JSX.Element {
-  const { featuredPodcast, country } = usePlayerContext();
+  const { featuredPodcast, country, setIsHome } = usePlayerContext();
 
   const { isLoading } = useFeaturedPodcasts();
+
+  useEffect(() => {
+    setIsHome(true);
+  }, []);
 
   return (
     <div id="HomePage">

@@ -29,7 +29,7 @@ function Search(): JSX.Element {
   useEffect(() => {
     search();
     setIsHome(false);
-  }, []);
+  }, [term]);
 
   return isLoading ? (
     <div className={styles.loader}>
@@ -56,7 +56,7 @@ function Search(): JSX.Element {
     </div>
   ) : (
     <div className={styles.noResults}>
-      <Confused />
+      <Confused data-cy="confused-icon" />
       <p>No results found.</p>
       <p>Try again with other search term.</p>
     </div>
